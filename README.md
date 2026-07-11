@@ -1,17 +1,16 @@
 # YT Conv Support
 
-Website statis untuk panduan saat YT Conv error. Ringan, responsif, dan siap dipasang di Vercel.
+Website statis ringan untuk panduan yt-dlp dan FFmpeg saat YT Conv error.
 
 ## Fitur
 
 - Deteksi Windows, Linux, macOS, Android, iPhone/iPad, dan ChromeOS.
-- Pilihan distro Linux.
-- Tur spotlight interaktif.
-- Pembuat perintah yt-dlp untuk MP4/MP3.
-- Panduan extension cookies dari Google Drive dan Chrome Web Store.
-- Tombol Termux APK langsung.
-- Web cadangan: YT1s, noTube, dan Cobalt.
-- Mode terang/gelap dan pencarian error.
+- Panduan Ubuntu/Debian, Fedora, Arch, openSUSE, Alpine, Linux universal, Steam Deck, dan perangkat lain.
+- Tur spotlight.
+- Pembuat perintah MP4/MP3.
+- Tutorial extension cookies.
+- Link Termux APK langsung.
+- Mode terang/gelap dan tampilan responsif.
 
 ## Struktur
 
@@ -21,6 +20,7 @@ yt-conv-support-vercel/
 ├── style.css
 ├── script.js
 ├── vercel.json
+├── README.md
 ├── .gitignore
 └── assets/
     └── favicon.svg
@@ -30,9 +30,11 @@ yt-conv-support-vercel/
 
 1. Upload semua file ke repository GitHub.
 2. Di Vercel pilih **New Project**.
-3. Impor repository tersebut.
-4. Tekan **Deploy**. Tidak perlu Build Command.
+3. Pilih repository tersebut.
+4. Framework Preset: **Other**.
+5. Build Command dan Output Directory dikosongkan.
+6. Tekan **Deploy**.
 
-## Keamanan
+## Catatan Android
 
-Jangan unggah `cookies.txt`. File tersebut sudah dimasukkan ke `.gitignore`, tetapi tetap periksa sebelum commit.
+Path `$HOME/storage/downloads` menunjuk ke **Penyimpanan internal → Download** setelah menjalankan `termux-setup-storage` dan memberi izin penyimpanan.

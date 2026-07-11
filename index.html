@@ -3,10 +3,10 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="description" content="YT Conv Support: panduan singkat yt-dlp, FFmpeg, cookies, Termux, Linux, Windows, macOS, dan pilihan web saat YT Conv error.">
+  <meta name="description" content="YT Conv Support membantu mengunduh dengan yt-dlp dan FFmpeg saat YT Conv error, untuk Windows, Linux, macOS, Android, ChromeOS, dan perangkat lain.">
   <meta name="theme-color" content="#f7f7f5">
   <meta property="og:title" content="YT Conv Support">
-  <meta property="og:description" content="Perangkat terdeteksi otomatis. Pilih langkah, salin perintah, selesai.">
+  <meta property="og:description" content="Perangkat terdeteksi otomatis. Pilih panduan, salin perintah, selesai.">
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="style.css">
   <title>YT Conv Support</title>
@@ -15,236 +15,271 @@
   <a class="skip-link" href="#main">Lewati ke isi</a>
 
   <header class="topbar">
-    <button class="icon-btn menu-btn" id="menuBtn" type="button" aria-label="Buka menu" aria-expanded="false">☰</button>
-    <a class="brand compact" href="#home"><span class="brand-mark">YT</span><strong>YT Conv Support</strong></a>
-    <button class="icon-btn theme-btn" type="button" aria-label="Ganti tema"><span class="theme-symbol">◐</span></button>
+    <button class="icon-button" id="menuButton" type="button" aria-label="Buka menu" aria-expanded="false">☰</button>
+    <a class="top-brand" href="#home"><span class="brand-mark">YT</span><strong>YT Conv Support</strong></a>
+    <button class="icon-button theme-toggle" type="button" aria-label="Ganti tema">◐</button>
   </header>
 
-  <div class="app-shell">
-    <aside class="sidebar" id="sidebar" aria-label="Menu">
-      <div>
-        <a class="brand" href="#home"><span class="brand-mark">YT</span><span><strong>YT Conv Support</strong><small>Solusi saat unduhan error</small></span></a>
-        <nav class="nav-list">
-          <a class="nav-link active" href="#home">Mulai</a>
-          <a class="nav-link" href="#guide">Panduan perangkat</a>
-          <a class="nav-link" href="#builder">Buat perintah</a>
-          <a class="nav-link" href="#cookies">Pasang extension</a>
-          <a class="nav-link" href="#fallback">Pilihan web</a>
-          <a class="nav-link" href="#errors">Cari error</a>
-        </nav>
+  <aside class="sidebar" id="sidebar" aria-label="Menu utama">
+    <a class="brand" href="#home">
+      <span class="brand-mark">YT</span>
+      <span><strong>YT Conv Support</strong><small>Solusi saat unduhan error</small></span>
+    </a>
+
+    <nav class="side-nav">
+      <a class="nav-link active" href="#home">Mulai</a>
+      <a class="nav-link" href="#guide">Panduan perangkat</a>
+      <a class="nav-link" href="#builder">Buat perintah</a>
+      <a class="nav-link" href="#cookies">Pasang extension</a>
+      <a class="nav-link" href="#fallback">Pilihan web</a>
+      <a class="nav-link" href="#errors">Cari error</a>
+    </nav>
+
+    <div class="sidebar-bottom">
+      <button class="sidebar-action theme-toggle" type="button">◐ <span id="themeLabel">Mode gelap</span></button>
+      <a class="sidebar-action back-link" href="https://ytconv.onrender.com/">← Kembali ke YT Conv</a>
+    </div>
+  </aside>
+  <div class="sidebar-backdrop" id="sidebarBackdrop" hidden></div>
+
+  <main class="main-content" id="main">
+    <section class="hero section-anchor" id="home">
+      <p class="eyebrow"><span></span>Bantuan saat YT Conv error</p>
+      <h1>Ikuti panduan<br><em>sesuai perangkatmu.</em></h1>
+      <p class="hero-copy">Perangkat dibaca otomatis. Tidak perlu memahami istilah rumit.</p>
+
+      <article class="detected-card" id="detectedCard">
+        <span class="detected-icon" id="detectedIcon">…</span>
+        <div>
+          <small>Perangkat terdeteksi</small>
+          <h2 id="detectedTitle">Sedang membaca…</h2>
+          <p id="detectedText">Tunggu sebentar.</p>
+        </div>
+        <div class="detected-actions">
+          <button class="button primary" id="useDetectedButton" type="button">Buka panduan</button>
+          <button class="button secondary" id="startTourButton" type="button">Lihat tur</button>
+        </div>
+      </article>
+
+      <div class="quick-grid">
+        <a href="#guide"><b>1</b><span><strong>Pilih perangkat</strong><small>Windows, Linux, HP</small></span></a>
+        <a href="#builder"><b>2</b><span><strong>Salin perintah</strong><small>MP4 atau MP3</small></span></a>
+        <a href="#cookies"><b>3</b><span><strong>Pasang cookies</strong><small>Saat login diminta</small></span></a>
+        <a href="#fallback"><b>4</b><span><strong>Pakai web</strong><small>Tanpa instalasi</small></span></a>
       </div>
-      <div class="sidebar-bottom">
-        <button class="sidebar-action theme-btn" type="button">◐ <span id="themeText">Mode gelap</span></button>
-        <a class="sidebar-action back-link" href="https://ytconv.onrender.com/">← Kembali ke YT Conv</a>
+    </section>
+
+    <section class="content-section section-anchor" id="guide">
+      <div class="section-heading">
+        <div><span class="section-number">01</span><h2>Pilih perangkat</h2></div>
+        <p id="guideHint">Pilihan yang cocok sudah ditandai.</p>
       </div>
-    </aside>
-    <div class="backdrop" id="backdrop" hidden></div>
 
-    <main id="main">
-      <section class="hero anchor" id="home">
-        <p class="eyebrow"><span></span>Bantuan saat YT Conv error</p>
-        <h1>Perangkatmu terdeteksi.<br><em>Ikuti langkah yang cocok.</em></h1>
-        <p class="hero-text">Tidak perlu paham istilah rumit. Pilih, salin, lalu jalankan.</p>
-
-        <article class="detected-card spotlight-ready" id="detectedCard">
-          <div class="detected-icon" id="detectedIcon">…</div>
-          <div class="detected-copy">
-            <span>Perangkat terdeteksi</span>
-            <h2 id="detectedTitle">Sedang membaca perangkat…</h2>
-            <p id="detectedText">Tunggu sebentar.</p>
-          </div>
-          <div class="detected-actions">
-            <button class="button primary" id="useDetectedBtn" type="button">Buka panduan</button>
-            <button class="button ghost pulse" id="startTourBtn" type="button">Mulai tur</button>
-          </div>
-        </article>
-
-        <div class="hero-shortcuts" aria-label="Pilihan cepat">
-          <a href="#guide"><b>1</b><span>Pilih perangkat</span></a>
-          <a href="#builder"><b>2</b><span>Buat perintah</span></a>
-          <a href="#cookies"><b>3</b><span>Pasang cookies</span></a>
-          <a href="#fallback"><b>4</b><span>Pakai web</span></a>
+      <div class="device-tools">
+        <label class="search-box"><span>⌕</span><input id="deviceSearch" type="search" placeholder="Cari Ubuntu, Fedora, Android…" autocomplete="off"></label>
+        <div class="filter-row" id="deviceFilters">
+          <button class="chip active" type="button" data-filter="all">Semua</button>
+          <button class="chip" type="button" data-filter="linux">Linux</button>
+          <button class="chip" type="button" data-filter="computer">Komputer</button>
+          <button class="chip" type="button" data-filter="mobile">HP</button>
         </div>
-      </section>
+      </div>
 
-      <section class="section anchor" id="guide">
-        <div class="section-head">
-          <div><span class="step-no">01</span><h2>Pilih perangkat</h2></div>
-          <p id="guideHint">Kami sudah memilih yang paling cocok.</p>
-        </div>
+      <div class="device-grid" id="deviceList"></div>
+      <p class="empty-state" id="deviceEmpty" hidden>Tidak ditemukan.</p>
 
-        <div class="device-tools">
-          <label class="search-box"><span>⌕</span><input id="deviceSearch" type="search" placeholder="Cari Ubuntu, Fedora, Android…" autocomplete="off"></label>
-          <div class="filters" id="deviceFilters">
-            <button class="chip active" type="button" data-filter="all">Semua</button>
-            <button class="chip" type="button" data-filter="linux">Linux</button>
-            <button class="chip" type="button" data-filter="computer">Komputer</button>
-            <button class="chip" type="button" data-filter="mobile">HP</button>
-          </div>
-        </div>
+      <article class="guide-card" id="guideCard" aria-live="polite">
+        <header class="guide-header">
+          <span class="guide-logo" id="guideLogo">W</span>
+          <div><small id="guideType">Komputer</small><h3 id="guideTitle">Windows 10/11</h3><p id="guideIntro">Pakai CMD bawaan Windows.</p></div>
+          <span class="easy-badge">Mudah</span>
+        </header>
 
-        <div class="device-list" id="deviceList">
-          <button class="device-btn active" type="button" data-guide="windows"><span class="device-badge">W</span><span><strong>Windows 10/11</strong><small>CMD + Winget</small></span></button>
-          <button class="device-btn" type="button" data-guide="ubuntu"><span class="device-badge">U</span><span><strong>Ubuntu & Debian</strong><small>APT</small></span></button>
-          <button class="device-btn" type="button" data-guide="fedora"><span class="device-badge">F</span><span><strong>Fedora</strong><small>DNF</small></span></button>
-          <button class="device-btn" type="button" data-guide="arch"><span class="device-badge">A</span><span><strong>Arch & turunannya</strong><small>Pacman</small></span></button>
-          <button class="device-btn" type="button" data-guide="macos"><span class="device-badge">M</span><span><strong>macOS</strong><small>Homebrew</small></span></button>
-          <button class="device-btn" type="button" data-guide="android"><span class="device-badge">An</span><span><strong>Android</strong><small>Termux</small></span></button>
-        </div>
-        <p class="empty-state" id="deviceEmpty" hidden>Tidak ditemukan.</p>
+        <div class="guide-steps">
+          <article class="guide-step">
+            <b>1</b>
+            <div><h4 id="openTitle">Buka CMD</h4><p id="openText">Tekan Start, ketik CMD, lalu buka.</p></div>
+          </article>
 
-        <article class="guide-card" id="guideCard" aria-live="polite">
-          <header class="guide-header">
-            <span class="guide-logo" id="guideLogo">W</span>
-            <div><small id="guideType">Komputer</small><h3 id="guideTitle">Windows 10/11</h3><p id="guideIntro">Panduan singkat.</p></div>
-            <span class="easy-badge">Mudah</span>
-          </header>
-
-          <div class="mini-steps">
-            <div class="mini-step"><b>1</b><span><strong id="openTitle">Buka terminal</strong><small id="openText">Buka CMD.</small></span></div>
-            <div class="mini-step code-step"><b>2</b><span><strong>Pasang alat</strong><small id="installText">Salin perintah ini.</small></span>
-              <div class="code-box"><div><span id="shellName">Terminal</span><button type="button" data-copy-target="installCode">Salin</button></div><pre><code id="installCode">winget install yt-dlp.yt-dlp
-winget install Gyan.FFmpeg</code></pre></div>
+          <article class="guide-step code-step">
+            <b>2</b>
+            <div>
+              <h4>Pasang yt-dlp dan FFmpeg</h4>
+              <p id="installText">Salin lalu jalankan.</p>
+              <div class="code-box">
+                <div><span id="shellName">CMD</span><button type="button" data-copy-target="installCode">Salin</button></div>
+                <pre><code id="installCode">winget install yt-dlp.yt-dlp
+winget install Gyan.FFmpeg</code></pre>
+              </div>
               <div id="guideExtra"></div>
             </div>
-            <div class="mini-step code-step"><b>3</b><span><strong>Coba unduh MP4</strong><small>Ganti TAUTAN_VIDEO.</small></span>
-              <div class="code-box"><div><span>Contoh</span><button type="button" data-copy-target="downloadCode">Salin</button></div><pre><code id="downloadCode">yt-dlp -f "bv*+ba/b" --merge-output-format mp4 -P "%USERPROFILE%\Downloads" "TAUTAN_VIDEO"</code></pre></div>
+          </article>
+
+          <article class="guide-step code-step">
+            <b>3</b>
+            <div>
+              <h4>Mulai mengunduh</h4>
+              <p id="downloadHelp">Ganti TAUTAN_VIDEO dengan tautan videomu.</p>
+              <div class="code-box">
+                <div><span>Contoh MP4</span><button type="button" data-copy-target="downloadCode">Salin</button></div>
+                <pre><code id="downloadCode">yt-dlp -f "bv*+ba/b" --merge-output-format mp4 -P "%USERPROFILE%\Downloads" "TAUTAN_VIDEO"</code></pre>
+              </div>
             </div>
-          </div>
-          <p class="guide-note" id="guideNote"></p>
-        </article>
-      </section>
-
-      <section class="section anchor" id="builder">
-        <div class="section-head">
-          <div><span class="step-no">02</span><h2>Buat perintah</h2></div>
-          <p>Tempel tautan. Perintah dibuat otomatis.</p>
-        </div>
-
-        <article class="builder-card">
-          <div class="platform-tabs" id="platformTabs" role="tablist">
-            <button class="platform-tab active" type="button" data-platform="windows">Windows</button>
-            <button class="platform-tab" type="button" data-platform="linux">Linux</button>
-            <button class="platform-tab" type="button" data-platform="macos">macOS</button>
-            <button class="platform-tab" type="button" data-platform="android">Android</button>
-          </div>
-          <div class="form-grid">
-            <label class="field wide"><span>Tautan video</span><input id="videoUrl" type="url" inputmode="url" placeholder="https://youtube.com/watch?v=…"><small id="urlHelp">Boleh dikosongkan.</small></label>
-            <label class="field"><span>Hasil</span><select id="format"><option value="mp4">Video MP4</option><option value="mp3">Audio MP3</option></select></label>
-            <label class="field" id="qualityField"><span>Kualitas</span><select id="quality"><option value="best">Terbaik</option><option value="1080">1080p</option><option value="720">720p</option><option value="480">480p</option></select></label>
-            <label class="field"><span>Cookies</span><select id="cookieMode"><option value="none">Tidak perlu</option><option value="chrome">Chrome saya</option><option value="edge">Edge saya</option><option value="firefox">Firefox saya</option><option value="file">cookies.txt</option></select></label>
-          </div>
-          <div class="code-box result-code"><div><span id="resultLabel">Windows CMD</span><button type="button" data-copy-target="resultCode">Salin perintah</button></div><pre><code id="resultCode">yt-dlp -f "bv*+ba/b" --merge-output-format mp4 -P "%USERPROFILE%\Downloads" "TAUTAN_VIDEO"</code></pre></div>
-          <p class="tiny-note" id="resultNote">File masuk ke Downloads.</p>
-        </article>
-      </section>
-
-      <section class="section anchor" id="cookies">
-        <div class="section-head">
-          <div><span class="step-no">03</span><h2>Pasang extension cookies</h2></div>
-          <p>Gunakan hanya untuk akunmu sendiri.</p>
-        </div>
-
-        <div class="cookie-sources">
-          <article class="source-card primary-source" id="driveExtensionCard">
-            <span class="source-tag">Utama</span>
-            <div class="source-icon">ZIP</div>
-            <h3>Extension dari Drive</h3>
-            <p>Unduh, ekstrak, lalu pasang manual.</p>
-            <a class="button primary full" href="https://drive.google.com/file/d/1tcp09OPav74jPqoy_CI2PUeVVB91y0dS/view?usp=sharing" target="_blank" rel="noopener noreferrer">Unduh extension</a>
-          </article>
-          <article class="source-card">
-            <span class="source-tag alt">Alternatif</span>
-            <div class="source-icon">CE</div>
-            <h3>Cookie-Editor</h3>
-            <p>Pasang langsung dari Chrome Web Store.</p>
-            <a class="button secondary full" href="https://chromewebstore.google.com/detail/cookie-editor/hlkenndednhfkekhgcdicdfddnkalmdm?hl=en" target="_blank" rel="noopener noreferrer">Buka Chrome Web Store</a>
           </article>
         </div>
+        <p class="guide-note" id="guideNote">File masuk ke folder Downloads.</p>
+      </article>
+    </section>
 
-        <article class="install-card" id="extensionSteps">
-          <div class="install-tabs">
-            <button class="install-tab active" type="button" data-extension-mode="manual">Dari Drive</button>
-            <button class="install-tab" type="button" data-extension-mode="store">Chrome Web Store</button>
-          </div>
-          <div class="install-flow" id="manualFlow">
-            <div><b>1</b><span>Unduh lalu ekstrak ZIP.</span></div>
-            <div><b>2</b><span>Buka <code>chrome://extensions</code>.</span><button type="button" data-copy-text="chrome://extensions">Salin</button></div>
-            <div><b>3</b><span>Nyalakan <strong>Developer mode</strong>.</span></div>
-            <div><b>4</b><span>Pilih <strong>Load unpacked</strong>, lalu pilih folder extension.</span></div>
-          </div>
-          <div class="install-flow" id="storeFlow" hidden>
-            <div><b>1</b><span>Buka Chrome Web Store.</span></div>
-            <div><b>2</b><span>Tekan <strong>Add to Chrome</strong>.</span></div>
-            <div><b>3</b><span>Tekan <strong>Add extension</strong>.</span></div>
-            <div><b>4</b><span>Pin extension agar mudah dibuka.</span></div>
-          </div>
+    <section class="content-section section-anchor" id="builder">
+      <div class="section-heading">
+        <div><span class="section-number">02</span><h2>Buat perintah</h2></div>
+        <p>Tempel tautan. Perintah berubah otomatis.</p>
+      </div>
+
+      <article class="builder-card">
+        <div class="builder-tabs" role="tablist" aria-label="Pilih sistem operasi">
+          <button class="builder-tab active" type="button" data-platform="windows" aria-selected="true">Windows</button>
+          <button class="builder-tab" type="button" data-platform="linux" aria-selected="false">Linux</button>
+          <button class="builder-tab" type="button" data-platform="macos" aria-selected="false">macOS</button>
+          <button class="builder-tab" type="button" data-platform="android" aria-selected="false">Android</button>
+        </div>
+
+        <div class="builder-grid">
+          <label class="field field-wide"><span>Tautan video</span><input id="videoUrl" type="url" inputmode="url" placeholder="https://youtube.com/watch?v=…"><small id="urlMessage">Boleh dikosongkan dulu.</small></label>
+          <label class="field"><span>Hasil</span><select id="formatSelect"><option value="mp4">Video MP4</option><option value="mp3">Audio MP3</option></select></label>
+          <label class="field" id="qualityField"><span>Kualitas</span><select id="qualitySelect"><option value="best">Terbaik</option><option value="1080">1080p</option><option value="720">720p</option><option value="480">480p</option></select></label>
+          <label class="field" id="cookieField"><span>Cookies</span><select id="cookieSelect"><option value="none">Tidak perlu</option><option value="chrome">Chrome saya</option><option value="edge">Edge saya</option><option value="firefox">Firefox saya</option><option value="file">cookies.txt</option></select></label>
+        </div>
+
+        <div class="generated-wrap">
+          <div class="generated-header"><span id="commandLabel">Perintah untuk Windows CMD</span><button class="copy-button" type="button" data-copy-target="generatedCommand">Salin perintah</button></div>
+          <pre class="code-block"><code id="generatedCommand">yt-dlp -f "bv*+ba/b" --merge-output-format mp4 -P "%USERPROFILE%\Downloads" "TAUTAN_VIDEO"</code></pre>
+        </div>
+        <p class="builder-tip" id="builderTip">File masuk ke folder Downloads Windows.</p>
+      </article>
+    </section>
+
+    <section class="content-section section-anchor" id="cookies">
+      <div class="section-heading">
+        <div><span class="section-number">03</span><h2>Pasang extension cookies</h2></div>
+        <p>Dipakai saat video meminta login.</p>
+      </div>
+
+      <div class="cookie-grid">
+        <article class="source-card featured">
+          <span class="card-label">Utama</span>
+          <span class="source-icon">ZIP</span>
+          <h3>Extension dari Drive</h3>
+          <p>Unduh, ekstrak, lalu pasang manual.</p>
+          <a class="button primary full" href="https://drive.google.com/file/d/1tcp09OPav74jPqoy_CI2PUeVVB91y0dS/view?usp=sharing" target="_blank" rel="noopener noreferrer">Unduh extension</a>
         </article>
 
-        <article class="export-card" id="exportCookiesCard">
-          <div><span class="export-icon">⇩</span><span><small>Setelah terpasang</small><h3>Ekspor cookies.txt</h3></span></div>
-          <ol><li>Login YouTube milikmu.</li><li>Buka extension.</li><li>Pilih <strong>Export → Netscape/cookies.txt</strong>.</li><li>Simpan di folder <strong>Downloads</strong>.</li></ol>
-          <div class="warning-line">⚠ Cookies bisa membuka akunmu. Jangan kirim atau unggah ke GitHub.</div>
+        <article class="source-card">
+          <span class="card-label alt">Alternatif</span>
+          <span class="source-icon">CE</span>
+          <h3>Cookie-Editor</h3>
+          <p>Pasang langsung dari Chrome Web Store.</p>
+          <a class="button secondary full" href="https://chromewebstore.google.com/detail/cookie-editor/hlkenndednhfkekhgcdicdfddnkalmdm?hl=en" target="_blank" rel="noopener noreferrer">Buka Chrome Web Store</a>
+        </article>
+      </div>
+
+      <article class="extension-card">
+        <div class="example-tabs">
+          <button class="example-tab active" type="button" data-example="manualExtension">Dari Drive</button>
+          <button class="example-tab" type="button" data-example="storeExtension">Web Store</button>
+        </div>
+
+        <div class="example-panel active" id="manualExtension">
+          <ol class="compact-steps">
+            <li><b>1</b><span>Unduh lalu ekstrak ZIP.</span></li>
+            <li><b>2</b><span>Buka <code>chrome://extensions</code>.</span><button type="button" data-copy-text="chrome://extensions">Salin</button></li>
+            <li><b>3</b><span>Nyalakan <strong>Developer mode</strong>.</span></li>
+            <li><b>4</b><span>Tekan <strong>Load unpacked</strong>, lalu pilih folder extension.</span></li>
+          </ol>
+        </div>
+
+        <div class="example-panel" id="storeExtension">
+          <ol class="compact-steps">
+            <li><b>1</b><span>Buka link Web Store.</span></li>
+            <li><b>2</b><span>Tekan <strong>Add to Chrome</strong>.</span></li>
+            <li><b>3</b><span>Tekan <strong>Add extension</strong>.</span></li>
+            <li><b>4</b><span>Pin extension agar mudah dibuka.</span></li>
+          </ol>
+        </div>
+      </article>
+
+      <div class="support-row">
+        <article class="export-card">
+          <div><span class="support-icon">⇩</span><span><small>Setelah terpasang</small><h3>Ekspor cookies.txt</h3></span></div>
+          <p>Login YouTube → buka extension → pilih <strong>Export Netscape</strong> → simpan ke Downloads.</p>
+          <small class="privacy-note">Jangan bagikan cookies. File ini dapat membuka akunmu.</small>
         </article>
 
         <article class="termux-card">
-          <div><span class="termux-icon">$_</span><span><small>Android</small><h3>Termux APK langsung</h3></span></div>
+          <div><span class="support-icon">$_</span><span><small>Android</small><h3>Termux APK langsung</h3></span></div>
           <a class="button primary" href="https://f-droid.org/repo/com.termux_1022.apk" target="_blank" rel="noopener noreferrer">Unduh Termux</a>
         </article>
-      </section>
+      </div>
+    </section>
 
-      <section class="section anchor" id="fallback">
-        <div class="section-head">
-          <div><span class="step-no">04</span><h2>Tanpa instalasi</h2></div>
-          <p>Pakai ini bila ingin cepat.</p>
-        </div>
-        <div class="web-grid">
-          <a class="web-card" href="https://yt1s.com.co/" target="_blank" rel="noopener noreferrer"><span class="web-logo">Y1</span><span><strong>YT1s</strong><small>Khusus MP4</small></span><b>↗</b></a>
-          <a class="web-card" href="https://notube.net/en/youtube-app-371" target="_blank" rel="noopener noreferrer"><span class="web-logo">NT</span><span><strong>noTube</strong><small>Pilihan cadangan</small></span><b>↗</b></a>
-          <a class="web-card" href="https://cobalt.tools/" target="_blank" rel="noopener noreferrer"><span class="web-logo">CO</span><span><strong>Cobalt</strong><small>TikTok & media sosial</small></span><b>↗</b></a>
-        </div>
-      </section>
+    <section class="content-section section-anchor" id="fallback">
+      <div class="section-heading">
+        <div><span class="section-number">04</span><h2>Tanpa instalasi</h2></div>
+        <p>Pakai bila ingin lebih cepat.</p>
+      </div>
 
-      <section class="section anchor" id="errors">
-        <div class="section-head">
-          <div><span class="step-no">05</span><h2>Cari error</h2></div>
-          <p>Ketik sedikit kata dari pesan error.</p>
-        </div>
-        <label class="search-box error-search"><span>⌕</span><input id="errorSearch" type="search" placeholder="Contoh: command not found, 403, ffmpeg…"></label>
-        <div class="error-list" id="errorList">
-          <details data-keywords="command not found yt-dlp tidak dikenali bukan perintah"><summary>yt-dlp tidak dikenali</summary><p>Pasang yt-dlp dulu, lalu tutup dan buka terminal.</p></details>
-          <details data-keywords="ffmpeg not found merger audio video missing"><summary>FFmpeg tidak ditemukan</summary><p>Pasang FFmpeg sesuai perangkat pada bagian Panduan.</p></details>
-          <details data-keywords="sign in login cookies bot confirm age restricted"><summary>Diminta login atau cookies</summary><p>Pakai cookies browser sendiri atau ekspor cookies.txt.</p></details>
-          <details data-keywords="403 429 forbidden too many requests blocked"><summary>Error 403 atau 429</summary><p>Tunggu sebentar, ganti jaringan, lalu coba lagi. Jangan mengulang terlalu cepat.</p></details>
-          <details data-keywords="android permission denied storage sdcard download"><summary>Android tidak bisa menyimpan</summary><p>Jalankan <code>termux-setup-storage</code>, lalu izinkan akses file.</p></details>
-        </div>
-        <p class="empty-state" id="errorEmpty" hidden>Error belum ada di daftar.</p>
-      </section>
+      <div class="fallback-grid">
+        <a class="fallback-card" href="https://yt1s.com.co/" target="_blank" rel="noopener noreferrer"><span class="site-logo yt1s-logo">Y1</span><span><h3>YT1s</h3><p>Khusus MP4.</p></span><b>↗</b></a>
+        <a class="fallback-card" href="https://notube.net/en/youtube-app-371" target="_blank" rel="noopener noreferrer"><span class="site-logo notube-logo">NT</span><span><h3>noTube</h3><p>Pilihan cadangan.</p></span><b>↗</b></a>
+        <a class="fallback-card" href="https://cobalt.tools/" target="_blank" rel="noopener noreferrer"><span class="site-logo cobalt-logo">CO</span><span><h3>Cobalt</h3><p>TikTok dan media sosial.</p></span><b>↗</b></a>
+      </div>
+    </section>
 
-      <footer>
-        <span>YT Conv Support</span>
-        <a href="https://ytconv.onrender.com/">Kembali ke YT Conv</a>
-      </footer>
-    </main>
-  </div>
+    <section class="content-section section-anchor" id="errors">
+      <div class="section-heading faq-heading">
+        <div><span class="section-number">05</span><h2>Cari error</h2></div>
+        <label class="faq-search"><span>⌕</span><input id="faqSearch" type="search" placeholder="Ketik error…"></label>
+      </div>
 
-  <nav class="mobile-dock" aria-label="Aksi cepat">
-    <a href="#guide">Perangkat</a><a href="#builder">Perintah</a><a href="#cookies">Cookies</a><a href="https://ytconv.onrender.com/">YT Conv</a>
-  </nav>
+      <div class="faq-list">
+        <details class="faq-item" data-keywords="command not found yt-dlp tidak dikenali bukan perintah">
+          <summary><span><code>yt-dlp tidak dikenali</code><small>Alat belum terpasang</small></span></summary>
+          <div class="faq-answer"><p>Ulangi langkah pemasangan sesuai perangkat, lalu tutup dan buka terminal.</p></div>
+        </details>
+        <details class="faq-item" data-keywords="ffmpeg not found merge audio video">
+          <summary><span><code>ffmpeg not found</code><small>FFmpeg belum terpasang</small></span></summary>
+          <div class="faq-answer"><p>Salin kembali perintah pemasangan FFmpeg dari panduan perangkat.</p></div>
+        </details>
+        <details class="faq-item" data-keywords="403 forbidden login cookies sign in bot">
+          <summary><span><code>403 / login diperlukan</code><small>Gunakan cookies akunmu</small></span></summary>
+          <div class="faq-answer"><p>Pasang extension cookies, ekspor sebagai Netscape, lalu pilih <strong>cookies.txt</strong> di pembuat perintah.</p></div>
+        </details>
+        <details class="faq-item" data-keywords="android permission denied storage sdcard internal download penyimpanan">
+          <summary><span><code>Android tidak bisa menyimpan</code><small>Izin penyimpanan belum aktif</small></span></summary>
+          <div class="faq-answer"><p>Jalankan <code>termux-setup-storage</code>, tekan <strong>Izinkan</strong>, lalu pakai folder <code>$HOME/storage/downloads</code>. Itu adalah Penyimpanan internal → Download.</p></div>
+        </details>
+      </div>
+      <p class="no-results" id="faqEmpty" hidden>Error tidak ditemukan.</p>
+    </section>
 
-  <button class="back-top" id="backTop" type="button" aria-label="Kembali ke atas">↑</button>
-  <div class="toast" id="toast" role="status" aria-live="polite">Tersalin</div>
+    <footer class="site-footer">
+      <div><span class="brand-mark small-mark">YT</span><span><strong>YT Conv Support</strong><small>Panduan sederhana untuk semua perangkat</small></span></div>
+      <p>Unduh hanya konten yang kamu miliki atau diizinkan untuk disimpan.</p>
+    </footer>
+  </main>
 
-  <div class="tour" id="tour" hidden aria-modal="true" role="dialog" aria-labelledby="tourTitle">
-    <div class="tour-focus" id="tourFocus"></div>
-    <article class="tour-popover" id="tourPopover">
-      <small id="tourCount">1/5</small>
+  <div class="tour-layer" id="tourLayer" hidden>
+    <div class="tour-shade"></div>
+    <div class="tour-popover" role="dialog" aria-modal="true" aria-labelledby="tourTitle">
+      <span id="tourCount">1/5</span>
       <h2 id="tourTitle">Perangkatmu</h2>
-      <p id="tourText">Kami memilih panduan yang sesuai.</p>
-      <div><button class="button ghost" id="tourSkip" type="button">Lewati</button><button class="button secondary" id="tourBack" type="button">Kembali</button><button class="button primary" id="tourNext" type="button">Lanjut</button></div>
-    </article>
+      <p id="tourText">Situs memilih panduan yang paling cocok.</p>
+      <div><button class="button ghost" id="tourClose" type="button">Tutup</button><button class="button primary" id="tourNext" type="button">Lanjut</button></div>
+    </div>
   </div>
 
+  <div class="toast" id="toast" role="status" aria-live="polite"><span>Berhasil disalin</span></div>
   <script src="script.js"></script>
 </body>
 </html>
