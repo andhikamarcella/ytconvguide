@@ -1,0 +1,581 @@
+<!doctype html>
+<html lang="id" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Panduan mudah mengunduh video atau audio saat layanan unduh utama sedang error, memakai yt-dlp, FFmpeg, CMD Windows, Termux Android, dan pilihan web cadangan." />
+  <meta name="theme-color" content="#f7f7f8" />
+  <meta property="og:title" content="ytconv error? Coba cara ini." />
+  <meta property="og:description" content="Panduan yt-dlp dan FFmpeg yang mudah diikuti di Windows maupun Android." />
+  <meta property="og:type" content="website" />
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="style.css" />
+  <title>ytconv error? Coba cara ini.</title>
+</head>
+<body>
+  <a class="skip-link" href="#isi-utama">Lewati ke isi utama</a>
+
+  <header class="mobile-header">
+    <button class="icon-button" id="menuButton" type="button" aria-label="Buka menu" aria-expanded="false" aria-controls="sidebar">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" /></svg>
+    </button>
+    <a class="mobile-brand" href="#ringkas" aria-label="Ke bagian awal">
+      <span class="brand-mark">U</span>
+      <span>Unduh Lagi</span>
+    </a>
+    <button class="icon-button theme-toggle" type="button" aria-label="Ganti tema">
+      <svg class="sun-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      <svg class="moon-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+    </button>
+  </header>
+
+  <div class="page-shell">
+    <aside class="sidebar" id="sidebar" aria-label="Navigasi panduan">
+      <div class="sidebar-top">
+        <a class="brand" href="#ringkas">
+          <span class="brand-mark">U</span>
+          <span>
+            <strong>Unduh Lagi</strong>
+            <small>Panduan saat layanan error</small>
+          </span>
+        </a>
+
+        <nav class="side-nav" aria-label="Daftar isi">
+          <a class="nav-link active" href="#ringkas">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11.5 12 4l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1Z"/></svg>
+            Ringkasan
+          </a>
+          <a class="nav-link" href="#buat-perintah">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m8 9-3 3 3 3M13 15h6"/><rect x="3" y="4" width="18" height="16" rx="2"/></svg>
+            Buat perintah
+          </a>
+          <a class="nav-link" href="#windows">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5.5 10.5 4v7H3ZM12 3.7 21 2v9h-9ZM3 13h7.5v7L3 18.5ZM12 13h9v9l-9-1.7Z"/></svg>
+            Windows CMD
+          </a>
+          <a class="nav-link" href="#cookies">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12a9 9 0 1 1-9-9 4 4 0 0 0 4 4 4 4 0 0 0 4 4c.34 0 .68-.04 1-.12Z"/><circle cx="8.5" cy="10.5" r="1"/><circle cx="12" cy="16" r="1"/><circle cx="6.5" cy="15.5" r=".5"/></svg>
+            Cookies aman
+          </a>
+          <a class="nav-link" href="#android">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="2" width="12" height="20" rx="2"/><path d="M10 18h4"/></svg>
+            Android
+          </a>
+          <a class="nav-link" href="#pilihan-web">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg>
+            Pilihan web
+          </a>
+          <a class="nav-link" href="#masalah-umum">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.6 2.6 0 1 1 4 2.2c-1 .65-1.5 1.15-1.5 2.3M12 17h.01"/></svg>
+            Masalah umum
+          </a>
+          <a class="nav-link" href="#deploy">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 9 16H3Z"/></svg>
+            Pasang ke Vercel
+          </a>
+        </nav>
+      </div>
+
+      <div class="sidebar-bottom">
+        <div class="progress-card">
+          <div class="progress-row">
+            <span>Langkah selesai</span>
+            <strong id="progressText">0/4</strong>
+          </div>
+          <div class="progress-track" aria-hidden="true"><span id="progressBar"></span></div>
+          <button class="text-button" id="resetProgress" type="button">Ulangi penanda</button>
+        </div>
+        <button class="theme-row theme-toggle" type="button">
+          <span class="theme-icon-wrap">
+            <svg class="sun-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+            <svg class="moon-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+          </span>
+          <span id="themeLabel">Mode gelap</span>
+        </button>
+      </div>
+    </aside>
+
+    <div class="sidebar-backdrop" id="sidebarBackdrop" hidden></div>
+
+    <main id="isi-utama" class="main-content">
+      <section class="hero section-anchor" id="ringkas">
+        <div class="eyebrow"><span></span> Jalan keluar saat situs unduh sedang bermasalah</div>
+        <h1>ytconv error? <em>Coba cara ini.</em></h1>
+        <p class="hero-copy">Unduh video atau audio lewat CMD di Windows, Termux di Android, atau buka pilihan web cadangan. Semua langkah dibuat singkat dan bisa langsung disalin.</p>
+        <div class="hero-actions">
+          <a class="button primary" href="#buat-perintah">
+            Buat perintah unduhan
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
+          </a>
+          <a class="button secondary" href="#windows">Mulai dari Windows</a>
+        </div>
+        <div class="notice legal-notice">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 3 7v5c0 5 3.8 8.7 9 10 5.2-1.3 9-5 9-10V7Z"/><path d="m9 12 2 2 4-4"/></svg>
+          <div>
+            <strong>Pakai dengan wajar.</strong>
+            <p>Unduh hanya konten milik sendiri, konten bebas pakai, atau konten yang sudah diizinkan pemiliknya. Jangan dipakai untuk melewati konten berbayar atau perlindungan akses.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="quick-grid" aria-label="Pilihan cara cepat">
+        <a class="quick-card" href="#windows">
+          <span class="quick-icon windows-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5.5 10.5 4v7H3ZM12 3.7 21 2v9h-9ZM3 13h7.5v7L3 18.5ZM12 13h9v9l-9-1.7Z"/></svg></span>
+          <span><strong>Windows</strong><small>Paling mudah lewat CMD</small></span>
+          <svg class="arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
+        </a>
+        <a class="quick-card" href="#android">
+          <span class="quick-icon android-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="2" width="12" height="20" rx="2"/><path d="M10 18h4"/></svg></span>
+          <span><strong>Android</strong><small>Lewat aplikasi Termux</small></span>
+          <svg class="arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
+        </a>
+        <a class="quick-card" href="#pilihan-web">
+          <span class="quick-icon web-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg></span>
+          <span><strong>Tanpa instalasi</strong><small>Pilihan web cadangan</small></span>
+          <svg class="arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
+        </a>
+      </section>
+
+      <section class="content-section section-anchor" id="buat-perintah">
+        <div class="section-heading">
+          <div>
+            <span class="section-number">01</span>
+            <h2>Buat perintah tanpa mengetik sendiri</h2>
+          </div>
+          <p>Tempel tautannya, pilih hasil yang diinginkan, lalu salin perintah.</p>
+        </div>
+
+        <div class="builder-card">
+          <div class="builder-tabs" role="tablist" aria-label="Pilih perangkat">
+            <button class="builder-tab active" type="button" role="tab" aria-selected="true" data-platform="windows">Windows CMD</button>
+            <button class="builder-tab" type="button" role="tab" aria-selected="false" data-platform="android">Android Termux</button>
+          </div>
+
+          <div class="builder-grid">
+            <label class="field field-wide">
+              <span>Tautan video</span>
+              <input id="videoUrl" type="url" inputmode="url" placeholder="https://www.youtube.com/watch?v=..." autocomplete="off" />
+              <small id="urlMessage">Boleh dikosongkan dulu. Nanti akan muncul tulisan TAUTAN_VIDEO.</small>
+            </label>
+
+            <label class="field">
+              <span>Hasil unduhan</span>
+              <select id="formatSelect">
+                <option value="mp4">Video MP4</option>
+                <option value="mp3">Audio MP3</option>
+              </select>
+            </label>
+
+            <label class="field" id="qualityField">
+              <span>Kualitas video</span>
+              <select id="qualitySelect">
+                <option value="best">Terbaik yang tersedia</option>
+                <option value="1080">Maksimal 1080p</option>
+                <option value="720">Maksimal 720p</option>
+                <option value="480">Maksimal 480p</option>
+              </select>
+            </label>
+
+            <label class="field" id="cookieField">
+              <span>Cookies</span>
+              <select id="cookieSelect">
+                <option value="none">Tidak perlu</option>
+                <option value="chrome">Ambil dari Chrome saya</option>
+                <option value="edge">Ambil dari Edge saya</option>
+                <option value="firefox">Ambil dari Firefox saya</option>
+                <option value="file">Pakai cookies.txt milik saya</option>
+              </select>
+            </label>
+          </div>
+
+          <div class="generated-wrap">
+            <div class="generated-header">
+              <div>
+                <span class="status-dot"></span>
+                <strong id="commandLabel">Perintah untuk Windows CMD</strong>
+              </div>
+              <button class="copy-button" type="button" data-copy-target="generatedCommand">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M15 9V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h3"/></svg>
+                <span>Salin</span>
+              </button>
+            </div>
+            <pre class="code-block generated-code"><code id="generatedCommand"></code></pre>
+          </div>
+          <p class="builder-tip" id="builderTip">File akan masuk ke folder Downloads Windows.</p>
+        </div>
+      </section>
+
+      <section class="content-section section-anchor" id="windows">
+        <div class="section-heading">
+          <div>
+            <span class="section-number">02</span>
+            <h2>Cara paling mudah di Windows</h2>
+          </div>
+          <p>Cukup pasang dua alat sekali saja: yt-dlp untuk mengambil file dan FFmpeg untuk menyatukan video dengan suara.</p>
+        </div>
+
+        <div class="steps-list">
+          <article class="step-card">
+            <div class="step-marker"><span>1</span></div>
+            <div class="step-body">
+              <div class="step-title-row">
+                <div>
+                  <h3>Buka CMD sebagai Administrator</h3>
+                  <p>Tekan tombol Windows, ketik <strong>CMD</strong>, lalu pilih <strong>Run as administrator</strong>.</p>
+                </div>
+                <label class="done-check"><input type="checkbox" data-progress="windows-open"/><span>Selesai</span></label>
+              </div>
+            </div>
+          </article>
+
+          <article class="step-card">
+            <div class="step-marker"><span>2</span></div>
+            <div class="step-body">
+              <div class="step-title-row">
+                <div>
+                  <h3>Pasang yt-dlp dan FFmpeg</h3>
+                  <p>Salin dua baris ini ke CMD. Tunggu sampai masing-masing selesai.</p>
+                </div>
+                <label class="done-check"><input type="checkbox" data-progress="windows-install"/><span>Selesai</span></label>
+              </div>
+              <div class="command-card">
+                <div class="command-topbar"><span>CMD</span><button class="copy-button compact" type="button" data-copy-target="installWindows"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M15 9V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h3"/></svg><span>Salin</span></button></div>
+                <pre class="code-block"><code id="installWindows">winget install --id yt-dlp.yt-dlp --exact --accept-source-agreements --accept-package-agreements
+winget install --id Gyan.FFmpeg --exact --accept-source-agreements --accept-package-agreements</code></pre>
+              </div>
+              <div class="small-note">Setelah selesai, tutup CMD lalu buka lagi supaya perintahnya terbaca.</div>
+            </div>
+          </article>
+
+          <article class="step-card">
+            <div class="step-marker"><span>3</span></div>
+            <div class="step-body">
+              <div class="step-title-row">
+                <div>
+                  <h3>Periksa apakah sudah terpasang</h3>
+                  <p>Kalau muncul nomor versi, berarti sudah siap.</p>
+                </div>
+                <label class="done-check"><input type="checkbox" data-progress="windows-check"/><span>Selesai</span></label>
+              </div>
+              <div class="command-card">
+                <div class="command-topbar"><span>CMD</span><button class="copy-button compact" type="button" data-copy-target="checkWindows"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M15 9V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h3"/></svg><span>Salin</span></button></div>
+                <pre class="code-block"><code id="checkWindows">yt-dlp --version
+ffmpeg -version</code></pre>
+              </div>
+            </div>
+          </article>
+
+          <article class="step-card">
+            <div class="step-marker"><span>4</span></div>
+            <div class="step-body">
+              <div class="step-title-row">
+                <div>
+                  <h3>Mulai mengunduh</h3>
+                  <p>Ganti <strong>TAUTAN_VIDEO</strong> dengan tautan yang ingin diunduh.</p>
+                </div>
+                <label class="done-check"><input type="checkbox" data-progress="windows-download"/><span>Selesai</span></label>
+              </div>
+              <div class="example-tabs" role="tablist" aria-label="Contoh hasil Windows">
+                <button class="example-tab active" type="button" data-example="winMp4">Video MP4</button>
+                <button class="example-tab" type="button" data-example="winMp3">Audio MP3</button>
+                <button class="example-tab" type="button" data-example="winPlaylist">Satu playlist</button>
+              </div>
+              <div class="command-card example-panel active" id="winMp4">
+                <div class="command-topbar"><span>Video MP4 kualitas terbaik</span><button class="copy-button compact" type="button" data-copy-target="winMp4Code"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M15 9V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h3"/></svg><span>Salin</span></button></div>
+                <pre class="code-block"><code id="winMp4Code">yt-dlp -f "bv*+ba/b" --merge-output-format mp4 -o "%USERPROFILE%\Downloads\%(title)s.%(ext)s" "TAUTAN_VIDEO"</code></pre>
+              </div>
+              <div class="command-card example-panel" id="winMp3">
+                <div class="command-topbar"><span>Audio MP3</span><button class="copy-button compact" type="button" data-copy-target="winMp3Code"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M15 9V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h3"/></svg><span>Salin</span></button></div>
+                <pre class="code-block"><code id="winMp3Code">yt-dlp -x --audio-format mp3 --audio-quality 0 -o "%USERPROFILE%\Downloads\%(title)s.%(ext)s" "TAUTAN_VIDEO"</code></pre>
+              </div>
+              <div class="command-card example-panel" id="winPlaylist">
+                <div class="command-topbar"><span>Semua video dalam playlist</span><button class="copy-button compact" type="button" data-copy-target="winPlaylistCode"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M15 9V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h3"/></svg><span>Salin</span></button></div>
+                <pre class="code-block"><code id="winPlaylistCode">yt-dlp -f "bv*+ba/b" --merge-output-format mp4 -o "%USERPROFILE%\Downloads\%(playlist_title)s\%(playlist_index)02d - %(title)s.%(ext)s" "TAUTAN_PLAYLIST"</code></pre>
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <div class="update-card">
+          <div class="update-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.34-5.66L20 8.68M20 4v4.68h-4.68"/></svg></div>
+          <div>
+            <h3>Kalau mendadak error, perbarui dulu</h3>
+            <p>Situs video sering berubah. Versi terbaru biasanya membawa perbaikan.</p>
+          </div>
+          <button class="copy-button update-copy" type="button" data-copy-text="yt-dlp --update-to nightly"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M15 9V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h3"/></svg><span>Salin perintah update</span></button>
+        </div>
+      </section>
+
+      <section class="content-section section-anchor" id="cookies">
+        <div class="section-heading">
+          <div>
+            <span class="section-number">03</span>
+            <h2>Kalau diminta login atau dianggap bot</h2>
+          </div>
+          <p>Cookies membuat yt-dlp memakai sesi browser milikmu sendiri. Ini hanya diperlukan pada beberapa video.</p>
+        </div>
+
+        <div class="warning-card">
+          <div class="warning-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 2.5 20h19Z"/><path d="M12 9v4M12 17h.01"/></svg></div>
+          <div>
+            <h3>Cookies sama pentingnya dengan kunci akun</h3>
+            <p>Jangan kirim file cookies ke orang lain, jangan unggah ke GitHub, dan jangan memakai cookies milik orang lain. Cara yang paling aman adalah membaca cookies langsung dari browser sendiri.</p>
+          </div>
+        </div>
+
+        <div class="cookie-grid">
+          <article class="info-card recommended-card">
+            <div class="card-label">Disarankan</div>
+            <h3>Ambil langsung dari browser</h3>
+            <p>Pastikan kamu sudah login di browser. Tutup browser kalau muncul pesan file sedang dipakai, lalu jalankan salah satu perintah ini.</p>
+            <div class="browser-command-list">
+              <div class="browser-command"><span>Chrome</span><code id="cookieChrome">yt-dlp --cookies-from-browser chrome "TAUTAN_VIDEO"</code><button class="mini-copy" type="button" aria-label="Salin perintah Chrome" data-copy-target="cookieChrome"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M15 9V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h3"/></svg></button></div>
+              <div class="browser-command"><span>Edge</span><code id="cookieEdge">yt-dlp --cookies-from-browser edge "TAUTAN_VIDEO"</code><button class="mini-copy" type="button" aria-label="Salin perintah Edge" data-copy-target="cookieEdge"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M15 9V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h3"/></svg></button></div>
+              <div class="browser-command"><span>Firefox</span><code id="cookieFirefox">yt-dlp --cookies-from-browser firefox "TAUTAN_VIDEO"</code><button class="mini-copy" type="button" aria-label="Salin perintah Firefox" data-copy-target="cookieFirefox"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M15 9V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h3"/></svg></button></div>
+            </div>
+          </article>
+
+          <article class="info-card">
+            <h3>Kalau sudah punya cookies.txt</h3>
+            <p>Simpan file milikmu sendiri di folder Downloads, lalu pakai perintah berikut.</p>
+            <div class="command-card flat">
+              <div class="command-topbar"><span>CMD</span><button class="copy-button compact" type="button" data-copy-target="cookieFileCode"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M15 9V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h3"/></svg><span>Salin</span></button></div>
+              <pre class="code-block"><code id="cookieFileCode">yt-dlp --cookies "%USERPROFILE%\Downloads\cookies.txt" "TAUTAN_VIDEO"</code></pre>
+            </div>
+            <p class="privacy-note">Setelah selesai, hapus file cookies jika sudah tidak diperlukan.</p>
+          </article>
+        </div>
+
+        <details class="reference-details">
+          <summary>
+            <span>Tautan Drive yang dikirim sebagai referensi</span>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+          </summary>
+          <div class="details-body">
+            <p>Isi file pada tautan ini belum dapat diperiksa dari proyek ini. Buka hanya jika kamu mengenali sumbernya. Jangan jalankan file yang mencurigakan dan jangan gunakan cookies akun milik orang lain.</p>
+            <a class="button secondary small" href="https://drive.google.com/file/d/1tcp09OPav74jPqoy_CI2PUeVVB91y0dS/view?usp=sharing" target="_blank" rel="noopener noreferrer">Buka tautan referensi</a>
+          </div>
+        </details>
+      </section>
+
+      <section class="content-section section-anchor" id="android">
+        <div class="section-heading">
+          <div>
+            <span class="section-number">04</span>
+            <h2>Cara di Android lewat Termux</h2>
+          </div>
+          <p>Tidak perlu root. Siapkan ruang kosong karena video akan disimpan ke folder Download.</p>
+        </div>
+
+        <div class="android-intro">
+          <div class="phone-illustration" aria-hidden="true">
+            <div class="phone-speaker"></div>
+            <div class="phone-screen">
+              <span>$ pkg update</span>
+              <span>$ pkg install</span>
+              <span class="phone-active">$ yt-dlp...</span>
+              <span class="phone-cursor"></span>
+            </div>
+          </div>
+          <div class="android-copy">
+            <span class="pill">Android 7 atau lebih baru</span>
+            <h3>Gunakan Termux dari sumber resminya</h3>
+            <p>Versi F-Droid atau halaman GitHub resmi lebih cocok untuk paket lengkap. Jangan mencampur Termux dan pluginnya dari sumber berbeda.</p>
+            <div class="inline-actions">
+              <a class="button secondary small" href="https://f-droid.org/packages/com.termux/" target="_blank" rel="noopener noreferrer">Buka F-Droid</a>
+              <a class="text-link" href="https://github.com/termux/termux-app/releases" target="_blank" rel="noopener noreferrer">GitHub resmi <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
+            </div>
+          </div>
+        </div>
+
+        <div class="mobile-steps">
+          <article class="mobile-step">
+            <span class="mobile-step-number">1</span>
+            <div>
+              <h3>Perbarui Termux dan pasang alatnya</h3>
+              <div class="command-card">
+                <div class="command-topbar"><span>Termux</span><button class="copy-button compact" type="button" data-copy-target="termuxInstall"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M15 9V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h3"/></svg><span>Salin</span></button></div>
+                <pre class="code-block"><code id="termuxInstall">pkg update -y && pkg upgrade -y
+pkg install python ffmpeg nodejs -y
+python -m pip install -U "yt-dlp[default]"</code></pre>
+              </div>
+            </div>
+          </article>
+
+          <article class="mobile-step">
+            <span class="mobile-step-number">2</span>
+            <div>
+              <h3>Izinkan akses ke folder Download</h3>
+              <p>Jalankan perintah ini, lalu tekan <strong>Izinkan</strong> saat Android bertanya.</p>
+              <div class="command-card">
+                <div class="command-topbar"><span>Termux</span><button class="copy-button compact" type="button" data-copy-target="termuxStorage"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M15 9V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h3"/></svg><span>Salin</span></button></div>
+                <pre class="code-block"><code id="termuxStorage">termux-setup-storage</code></pre>
+              </div>
+            </div>
+          </article>
+
+          <article class="mobile-step">
+            <span class="mobile-step-number">3</span>
+            <div>
+              <h3>Unduh video atau audio</h3>
+              <div class="example-tabs android-tabs" role="tablist" aria-label="Contoh hasil Android">
+                <button class="example-tab active" type="button" data-example="androidMp4">Video MP4</button>
+                <button class="example-tab" type="button" data-example="androidMp3">Audio MP3</button>
+                <button class="example-tab" type="button" data-example="androidUpdate">Perbarui saat error</button>
+              </div>
+              <div class="command-card example-panel active" id="androidMp4">
+                <div class="command-topbar"><span>Video ke folder Download</span><button class="copy-button compact" type="button" data-copy-target="androidMp4Code"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M15 9V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h3"/></svg><span>Salin</span></button></div>
+                <pre class="code-block"><code id="androidMp4Code">yt-dlp -f "bv*+ba/b" --merge-output-format mp4 -P "/sdcard/Download" "TAUTAN_VIDEO"</code></pre>
+              </div>
+              <div class="command-card example-panel" id="androidMp3">
+                <div class="command-topbar"><span>Audio MP3 ke folder Download</span><button class="copy-button compact" type="button" data-copy-target="androidMp3Code"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M15 9V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h3"/></svg><span>Salin</span></button></div>
+                <pre class="code-block"><code id="androidMp3Code">yt-dlp -x --audio-format mp3 --audio-quality 0 -P "/sdcard/Download" "TAUTAN_VIDEO"</code></pre>
+              </div>
+              <div class="command-card example-panel" id="androidUpdate">
+                <div class="command-topbar"><span>Ambil pembaruan terbaru</span><button class="copy-button compact" type="button" data-copy-target="androidUpdateCode"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M15 9V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h3"/></svg><span>Salin</span></button></div>
+                <pre class="code-block"><code id="androidUpdateCode">python -m pip install -U --pre "yt-dlp[default]"</code></pre>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="content-section section-anchor" id="pilihan-web">
+        <div class="section-heading">
+          <div>
+            <span class="section-number">05</span>
+            <h2>Kalau tidak mau memasang apa pun</h2>
+          </div>
+          <p>Pakai sebagai jalan cadangan. Situs pihak ketiga dapat berubah, penuh iklan, atau berhenti bekerja sewaktu-waktu.</p>
+        </div>
+
+        <div class="fallback-grid">
+          <article class="fallback-card">
+            <div class="fallback-top">
+              <span class="site-logo notube-logo">no</span>
+              <span class="availability"><i></i> Pilihan cadangan</span>
+            </div>
+            <h3>noTube</h3>
+            <p>Bisa dicoba saat ingin cara sederhana lewat browser. Hindari tombol iklan, pop-up, dan tawaran memasang aplikasi yang tidak dikenal.</p>
+            <a class="button secondary full" href="https://notube.net/en/youtube-app-371" target="_blank" rel="noopener noreferrer">Buka noTube <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
+          </article>
+
+          <article class="fallback-card">
+            <div class="fallback-top">
+              <span class="site-logo cobalt-logo">co</span>
+              <span class="availability"><i></i> Untuk media sosial</span>
+            </div>
+            <h3>Cobalt</h3>
+            <p>Dalam panduan ini, gunakan untuk TikTok dan layanan media sosial lain yang didukung. Bukan pilihan utama untuk YouTube di halaman ini.</p>
+            <a class="button secondary full" href="https://cobalt.tools/" target="_blank" rel="noopener noreferrer">Buka Cobalt <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
+          </article>
+        </div>
+
+        <div class="safe-browsing-note">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 3 7v5c0 5 3.8 8.7 9 10 5.2-1.3 9-5 9-10V7Z"/><path d="M12 8v4M12 16h.01"/></svg>
+          <p><strong>Jangan masukkan akun atau kata sandi</strong> ke situs unduh pihak ketiga. Kalau situs meminta login, tutup halaman dan gunakan yt-dlp dengan cookies browser milik sendiri.</p>
+        </div>
+      </section>
+
+      <section class="content-section section-anchor" id="masalah-umum">
+        <div class="section-heading faq-heading">
+          <div>
+            <span class="section-number">06</span>
+            <h2>Error yang paling sering muncul</h2>
+          </div>
+          <label class="faq-search">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>
+            <input id="faqSearch" type="search" placeholder="Cari tulisan error..." />
+          </label>
+        </div>
+
+        <div class="faq-list" id="faqList">
+          <details class="faq-item" data-keywords="yt-dlp not recognized tidak dikenali command cmd path">
+            <summary><span><code>'yt-dlp' is not recognized</code><small>Windows tidak menemukan yt-dlp</small></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
+            <div class="faq-answer"><p>Tutup CMD, buka lagi, lalu coba <code>yt-dlp --version</code>. Kalau masih sama, ulangi pemasangan dengan winget dan pastikan prosesnya selesai tanpa tulisan gagal.</p><button class="copy-button compact" type="button" data-copy-text="winget install --id yt-dlp.yt-dlp --exact"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M15 9V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h3"/></svg><span>Salin pemasangan</span></button></div>
+          </details>
+
+          <details class="faq-item" data-keywords="ffmpeg not found postprocessing merge audio video suara tidak ada">
+            <summary><span><code>ffmpeg not found</code><small>Video dan suara tidak bisa disatukan</small></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
+            <div class="faq-answer"><p>Pasang FFmpeg, lalu tutup dan buka kembali CMD. Periksa dengan <code>ffmpeg -version</code>.</p><button class="copy-button compact" type="button" data-copy-text="winget install --id Gyan.FFmpeg --exact"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M15 9V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h3"/></svg><span>Salin pemasangan</span></button></div>
+          </details>
+
+          <details class="faq-item" data-keywords="sign in confirm bot login cookies youtube bot">
+            <summary><span><code>Sign in to confirm you're not a bot</code><small>Perlu sesi browser milikmu</small></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
+            <div class="faq-answer"><p>Perbarui yt-dlp. Kalau belum berhasil, login di Chrome lalu gunakan <code>--cookies-from-browser chrome</code>. Tutup Chrome bila cookies tidak bisa dibaca.</p><button class="copy-button compact" type="button" data-copy-text="yt-dlp --update-to nightly"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M15 9V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h3"/></svg><span>Salin update</span></button></div>
+          </details>
+
+          <details class="faq-item" data-keywords="requested format not available format tidak tersedia 1080 720">
+            <summary><span><code>Requested format is not available</code><small>Kualitas yang dipilih tidak tersedia</small></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
+            <div class="faq-answer"><p>Coba perintah paling sederhana terlebih dahulu. yt-dlp akan memilih format yang tersedia secara otomatis.</p><button class="copy-button compact" type="button" data-copy-text="yt-dlp \"TAUTAN_VIDEO\""><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M15 9V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h3"/></svg><span>Salin cara sederhana</span></button></div>
+          </details>
+
+          <details class="faq-item" data-keywords="http error 403 forbidden gagal akses vpn cookies update">
+            <summary><span><code>HTTP Error 403: Forbidden</code><small>Akses ditolak sementara</small></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
+            <div class="faq-answer"><p>Perbarui yt-dlp, matikan VPN bila sedang aktif, lalu coba lagi. Pada video tertentu, cookies browser mungkin diperlukan.</p></div>
+          </details>
+
+          <details class="faq-item" data-keywords="permission denied android termux storage folder download izin">
+            <summary><span><code>Permission denied</code> di Android<small>Termux belum diizinkan membuka penyimpanan</small></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
+            <div class="faq-answer"><p>Jalankan <code>termux-setup-storage</code>, tekan Izinkan, lalu ulangi unduhan. Periksa juga izin Termux di Pengaturan Android.</p></div>
+          </details>
+
+          <details class="faq-item" data-keywords="no space left ruang penyimpanan penuh disk storage android windows">
+            <summary><span><code>No space left on device</code><small>Ruang penyimpanan sudah penuh</small></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
+            <div class="faq-answer"><p>Hapus atau pindahkan beberapa file terlebih dahulu. Video berkualitas tinggi bisa membutuhkan ruang lebih besar karena video dan audio diunduh terpisah sebelum disatukan.</p></div>
+          </details>
+        </div>
+        <p class="no-results" id="faqEmpty" hidden>Tidak ada error yang cocok. Coba kata yang lebih pendek.</p>
+      </section>
+
+      <section class="content-section section-anchor" id="deploy">
+        <div class="section-heading">
+          <div>
+            <span class="section-number">07</span>
+            <h2>Pasang website ini ke GitHub dan Vercel</h2>
+          </div>
+          <p>Tidak perlu Codex, terminal, atau build. Cukup unggah file sesuai nama dan foldernya.</p>
+        </div>
+
+        <div class="deploy-layout">
+          <div class="tree-card">
+            <div class="tree-header"><span>Struktur file</span><span class="tree-badge">Siap unggah</span></div>
+            <pre class="file-tree" aria-label="Struktur folder proyek"><code>unduh-lagi-vercel/
+├── index.html
+├── style.css
+├── script.js
+├── vercel.json
+├── README.md
+└── assets/
+    └── favicon.svg</code></pre>
+          </div>
+
+          <div class="deploy-steps">
+            <article><span>1</span><div><h3>Buat repository baru di GitHub</h3><p>Beri nama misalnya <strong>unduh-lagi</strong>. Pilih Public atau Private sesuai kebutuhan.</p></div></article>
+            <article><span>2</span><div><h3>Unggah semua file</h3><p>Pilih <strong>Add file → Upload files</strong>. Pastikan folder <code>assets</code> tetap ada dan berisi <code>favicon.svg</code>.</p></div></article>
+            <article><span>3</span><div><h3>Hubungkan ke Vercel</h3><p>Di Vercel pilih <strong>Add New → Project</strong>, pilih repository tadi, lalu tekan <strong>Deploy</strong>. Tidak perlu mengisi Build Command.</p></div></article>
+            <article><span>4</span><div><h3>Selesai</h3><p>Setiap kali file di GitHub diperbarui, Vercel akan memasang versi baru secara otomatis.</p></div></article>
+          </div>
+        </div>
+
+        <div class="deploy-links">
+          <a class="text-link" href="https://github.com/new" target="_blank" rel="noopener noreferrer">Buat repository GitHub <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
+          <a class="text-link" href="https://vercel.com/new" target="_blank" rel="noopener noreferrer">Buka halaman deploy Vercel <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
+        </div>
+      </section>
+
+      <footer class="site-footer">
+        <div><span class="brand-mark small-mark">U</span><span><strong>Unduh Lagi</strong><small>Panduan sederhana saat layanan unduh sedang error.</small></span></div>
+        <p>Halaman panduan, bukan layanan pengunduh. Tautan dan alat pihak ketiga dapat berubah sewaktu-waktu.</p>
+      </footer>
+    </main>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite" aria-atomic="true">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg>
+    <span>Berhasil disalin</span>
+  </div>
+
+  <script src="script.js" defer></script>
+</body>
+</html>
