@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Panduan mudah saat downloader utama error: pakai yt-dlp, FFmpeg, cookies, mobile, dan pilihan web cadangan." />
+    <title>Solusi Saat Downloader Error</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/src/styles.css" />
+  </head>
+  <body>
+    <div class="noise"></div>
+    <header class="topbar">
+      <a class="brand" href="#top" aria-label="Kembali ke atas">
+        <span class="brand-mark">↓</span>
+        <span>Video Rescue Guide</span>
+      </a>
+      <nav class="nav" aria-label="Navigasi utama">
+        <a href="#cmd">CMD</a>
+        <a href="#cookies">Cookies</a>
+        <a href="#mobile">Mobile</a>
+        <a href="#fallback">Web cadangan</a>
+      </nav>
+      <button class="theme-toggle" type="button" aria-label="Ganti tema">🌙</button>
+    </header>
+
+    <main id="top">
+      <section class="hero section-shell">
+        <div class="hero-copy">
+          <p class="eyebrow">Solusi kalau ytconv.onrender.com sedang error</p>
+          <h1>Unduh video tetap bisa, tanpa panik dan tanpa bahasa ribet.</h1>
+          <p class="hero-text">Panduan ini dibuat untuk orang awam: tinggal pilih perangkat, salin perintah, lalu ikuti langkahnya pelan-pelan. Cocok untuk YouTube, TikTok, dan kebutuhan download MP4.</p>
+          <div class="hero-actions">
+            <a class="button primary" href="#quick">Mulai dari langkah cepat</a>
+            <a class="button ghost" href="#cmd">Lihat command CMD</a>
+          </div>
+        </div>
+        <aside class="status-card" aria-label="Ringkasan solusi">
+          <div class="status-dot"></div>
+          <h2>Rute paling aman</h2>
+          <ol>
+            <li>Coba yt-dlp + FFmpeg di laptop.</li>
+            <li>Jika diminta login, pakai cookies.</li>
+            <li>Kalau di HP, gunakan aplikasi terminal atau web cadangan.</li>
+          </ol>
+        </aside>
+      </section>
+
+      <section id="quick" class="section-shell quick-grid">
+        <article class="chat-card assistant-card">
+          <span class="avatar">G</span>
+          <div>
+            <h2>Kalau mau yang paling cepat</h2>
+            <p>Gunakan perintah ini di CMD Windows setelah yt-dlp dan FFmpeg terpasang. Ganti <strong>LINK_VIDEO</strong> dengan link video kamu.</p>
+          </div>
+        </article>
+        <article class="code-card" data-copy-block>
+          <div class="code-head"><span>CMD · download kualitas terbaik</span><button type="button" data-copy>Copy</button></div>
+          <pre><code>yt-dlp -f "bv*+ba/b" --merge-output-format mp4 "LINK_VIDEO"</code></pre>
+        </article>
+      </section>
+
+      <section id="cmd" class="section-shell steps-section">
+        <div class="section-title">
+          <p class="eyebrow">Laptop / PC Windows</p>
+          <h2>Download lewat CMD pakai yt-dlp dan FFmpeg</h2>
+          <p>Ikuti dari atas ke bawah. Kalau satu langkah sudah beres, lanjut ke langkah berikutnya.</p>
+        </div>
+        <div class="steps">
+          <article class="step-card">
+            <span class="step-number">1</span>
+            <h3>Install yt-dlp</h3>
+            <p>Buka CMD atau PowerShell, lalu jalankan perintah ini.</p>
+            <div class="code-card" data-copy-block><div class="code-head"><span>Install yt-dlp</span><button type="button" data-copy>Copy</button></div><pre><code>winget install yt-dlp.yt-dlp</code></pre></div>
+          </article>
+          <article class="step-card">
+            <span class="step-number">2</span>
+            <h3>Install FFmpeg</h3>
+            <p>FFmpeg membantu menyatukan video dan audio supaya hasilnya rapi menjadi MP4.</p>
+            <div class="code-card" data-copy-block><div class="code-head"><span>Install FFmpeg</span><button type="button" data-copy>Copy</button></div><pre><code>winget install Gyan.FFmpeg</code></pre></div>
+          </article>
+          <article class="step-card">
+            <span class="step-number">3</span>
+            <h3>Cek sudah kebaca</h3>
+            <p>Kalau muncul nomor versi, berarti sudah siap dipakai.</p>
+            <div class="code-card" data-copy-block><div class="code-head"><span>Cek versi</span><button type="button" data-copy>Copy</button></div><pre><code>yt-dlp --version
+ffmpeg -version</code></pre></div>
+          </article>
+          <article class="step-card featured-step">
+            <span class="step-number">4</span>
+            <h3>Mulai download</h3>
+            <p>Ganti LINK_VIDEO dengan link yang mau kamu unduh.</p>
+            <div class="code-card" data-copy-block><div class="code-head"><span>Download MP4</span><button type="button" data-copy>Copy</button></div><pre><code>yt-dlp -f "bv*+ba/b" --merge-output-format mp4 "LINK_VIDEO"</code></pre></div>
+          </article>
+        </div>
+      </section>
+
+      <section id="cookies" class="section-shell split-section">
+        <div>
+          <p class="eyebrow">Kalau video minta login</p>
+          <h2>Pakai file cookies agar yt-dlp bisa membaca sesi browser</h2>
+          <p>Beberapa video kadang tidak bisa diunduh tanpa data sesi. Simpan file cookies di folder yang sama dengan CMD, lalu jalankan command cookies di bawah.</p>
+          <a class="button secondary" href="https://drive.google.com/file/d/1tcp09OPav74jPqoy_CI2PUeVVB91y0dS/view?usp=sharing" target="_blank" rel="noreferrer">Buka file cookies dari Google Drive</a>
+        </div>
+        <div class="code-card" data-copy-block>
+          <div class="code-head"><span>Download dengan cookies</span><button type="button" data-copy>Copy</button></div>
+          <pre><code>yt-dlp --cookies cookies.txt -f "bv*+ba/b" --merge-output-format mp4 "LINK_VIDEO"</code></pre>
+        </div>
+      </section>
+
+      <section id="mobile" class="section-shell mobile-section">
+        <div class="section-title">
+          <p class="eyebrow">Android / Mobile</p>
+          <h2>Kalau pakai HP, pilih cara yang paling nyaman</h2>
+        </div>
+        <div class="mobile-grid">
+          <article class="info-card">
+            <h3>Opsi terminal Android</h3>
+            <p>Pakai Termux, lalu pasang yt-dlp dan FFmpeg. Ini cocok kalau kamu sudah terbiasa copy-paste command.</p>
+            <div class="code-card" data-copy-block><div class="code-head"><span>Termux</span><button type="button" data-copy>Copy</button></div><pre><code>pkg update && pkg upgrade
+pkg install python ffmpeg
+pip install -U yt-dlp
+yt-dlp -f "bv*+ba/b" --merge-output-format mp4 "LINK_VIDEO"</code></pre></div>
+          </article>
+          <article class="info-card calm">
+            <h3>Opsi paling simpel</h3>
+            <p>Kalau tidak mau ribet terminal, gunakan web cadangan sesuai jenis link. Jangan masukkan akun atau password di website yang tidak kamu percaya.</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="fallback" class="section-shell fallback-section">
+        <div class="section-title">
+          <p class="eyebrow">Web cadangan</p>
+          <h2>Kalau command masih belum berhasil</h2>
+          <p>Pilih layanan sesuai kebutuhan. Ini hanya jalan alternatif saat cara utama sedang bermasalah.</p>
+        </div>
+        <div class="link-grid">
+          <a class="fallback-link" href="https://notube.net/en/youtube-app-371" target="_blank" rel="noreferrer"><strong>NoTube</strong><span>Alternatif download lewat web.</span></a>
+          <a class="fallback-link" href="https://cobalt.tools/" target="_blank" rel="noreferrer"><strong>Cobalt</strong><span>Cocok untuk TikTok dan beberapa platform lain.</span></a>
+          <a class="fallback-link" href="https://yt1s.com.co" target="_blank" rel="noreferrer"><strong>YT1S MP4</strong><span>Cadangan untuk kebutuhan MP4.</span></a>
+        </div>
+      </section>
+    </main>
+
+    <button class="to-top" type="button" aria-label="Kembali ke atas">↑</button>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
