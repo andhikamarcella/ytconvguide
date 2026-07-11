@@ -158,6 +158,24 @@ code, pre { font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, m
 .progress-track span { display: block; width: 0; height: 100%; border-radius: inherit; background: var(--accent); transition: width .25s ease; }
 .text-button { padding: 0; border: 0; background: none; color: var(--muted); cursor: pointer; font-size: 11px; }
 .text-button:hover { color: var(--text); }
+.sidebar-return {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 42px;
+  padding: 9px 12px;
+  border: 1px solid var(--accent-line);
+  border-radius: 10px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: transform .15s ease, background .15s ease, border-color .15s ease;
+}
+.sidebar-return:hover { transform: translateY(-1px); background: color-mix(in srgb, var(--accent-soft) 75%, var(--surface)); border-color: var(--accent); }
+.sidebar-return svg { width: 18px; height: 18px; flex: 0 0 auto; }
 .theme-row {
   display: flex;
   align-items: center;
@@ -225,6 +243,8 @@ html[data-theme="dark"] .moon-icon { display: block; }
 .button.primary:hover { box-shadow: var(--shadow-md); }
 .button.secondary { border-color: var(--border-strong); background: var(--surface); color: var(--text); }
 .button.secondary:hover { background: var(--surface-soft); }
+.button.return-button { border-color: var(--accent-line); background: var(--accent-soft); color: var(--accent); }
+.button.return-button:hover { border-color: var(--accent); background: color-mix(in srgb, var(--accent-soft) 76%, var(--surface)); }
 .button.small { min-height: 38px; padding: 8px 13px; font-size: 13px; }
 .button.full { width: 100%; }
 .notice { display: flex; gap: 12px; text-align: left; }

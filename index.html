@@ -5,12 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="description" content="Panduan mudah mengunduh video atau audio saat layanan unduh utama sedang error, memakai yt-dlp, FFmpeg, CMD Windows, Termux Android, dan pilihan web cadangan." />
   <meta name="theme-color" content="#f7f7f8" />
-  <meta property="og:title" content="ytconv error? Coba cara ini." />
-  <meta property="og:description" content="Panduan yt-dlp dan FFmpeg yang mudah diikuti di Windows maupun Android." />
+  <meta property="og:title" content="YT Conv Support — Solusi saat YT Conv error" />
+  <meta property="og:description" content="Panduan bantuan YT Conv: yt-dlp dan FFmpeg yang mudah diikuti di Windows maupun Android." />
   <meta property="og:type" content="website" />
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="style.css" />
-  <title>ytconv error? Coba cara ini.</title>
+  <title>YT Conv Support — Solusi saat YT Conv error</title>
 </head>
 <body>
   <a class="skip-link" href="#isi-utama">Lewati ke isi utama</a>
@@ -20,8 +20,8 @@
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" /></svg>
     </button>
     <a class="mobile-brand" href="#ringkas" aria-label="Ke bagian awal">
-      <span class="brand-mark">U</span>
-      <span>Unduh Lagi</span>
+      <span class="brand-mark">YT</span>
+      <span>YT Conv Support</span>
     </a>
     <button class="icon-button theme-toggle" type="button" aria-label="Ganti tema">
       <svg class="sun-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
@@ -33,9 +33,9 @@
     <aside class="sidebar" id="sidebar" aria-label="Navigasi panduan">
       <div class="sidebar-top">
         <a class="brand" href="#ringkas">
-          <span class="brand-mark">U</span>
+          <span class="brand-mark">YT</span>
           <span>
-            <strong>Unduh Lagi</strong>
+            <strong>YT Conv Support</strong>
             <small>Panduan saat layanan error</small>
           </span>
         </a>
@@ -85,6 +85,10 @@
           <div class="progress-track" aria-hidden="true"><span id="progressBar"></span></div>
           <button class="text-button" id="resetProgress" type="button">Ulangi penanda</button>
         </div>
+        <a class="sidebar-return" href="https://ytconv.onrender.com/" aria-label="Kembali ke website utama YT Conv">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>
+          <span>Kembali ke YT Conv</span>
+        </a>
         <button class="theme-row theme-toggle" type="button">
           <span class="theme-icon-wrap">
             <svg class="sun-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
@@ -100,7 +104,7 @@
     <main id="isi-utama" class="main-content">
       <section class="hero section-anchor" id="ringkas">
         <div class="eyebrow"><span></span> Jalan keluar saat situs unduh sedang bermasalah</div>
-        <h1>ytconv error? <em>Coba cara ini.</em></h1>
+        <h1>YT Conv bermasalah? <em>Coba cara ini.</em></h1>
         <p class="hero-copy">Unduh video atau audio lewat CMD di Windows, Termux di Android, atau buka pilihan web cadangan. Semua langkah dibuat singkat dan bisa langsung disalin.</p>
         <div class="hero-actions">
           <a class="button primary" href="#buat-perintah">
@@ -108,6 +112,10 @@
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
           </a>
           <a class="button secondary" href="#windows">Mulai dari Windows</a>
+          <a class="button return-button" href="https://ytconv.onrender.com/" aria-label="Kembali ke website utama YT Conv">
+            Kembali ke YT Conv
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>
+          </a>
         </div>
         <div class="notice legal-notice">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 3 7v5c0 5 3.8 8.7 9 10 5.2-1.3 9-5 9-10V7Z"/><path d="m9 12 2 2 4-4"/></svg>
@@ -550,7 +558,7 @@ python -m pip install -U "yt-dlp[default]"</code></pre>
         <div class="deploy-layout">
           <div class="tree-card">
             <div class="tree-header"><span>Struktur file</span><span class="tree-badge">Siap unggah</span></div>
-            <pre class="file-tree" aria-label="Struktur folder proyek"><code>unduh-lagi-vercel/
+            <pre class="file-tree" aria-label="Struktur folder proyek"><code>yt-conv-support-vercel/
 ├── index.html
 ├── style.css
 ├── script.js
@@ -561,7 +569,7 @@ python -m pip install -U "yt-dlp[default]"</code></pre>
           </div>
 
           <div class="deploy-steps">
-            <article><span>1</span><div><h3>Buat repository baru di GitHub</h3><p>Beri nama misalnya <strong>unduh-lagi</strong>. Pilih Public atau Private sesuai kebutuhan.</p></div></article>
+            <article><span>1</span><div><h3>Buat repository baru di GitHub</h3><p>Beri nama misalnya <strong>yt-conv-support</strong>. Pilih Public atau Private sesuai kebutuhan.</p></div></article>
             <article><span>2</span><div><h3>Unggah semua file</h3><p>Pilih <strong>Add file → Upload files</strong>. Pastikan folder <code>assets</code> tetap ada dan berisi <code>favicon.svg</code>.</p></div></article>
             <article><span>3</span><div><h3>Hubungkan ke Vercel</h3><p>Di Vercel pilih <strong>Add New → Project</strong>, pilih repository tadi, lalu tekan <strong>Deploy</strong>. Tidak perlu mengisi Build Command.</p></div></article>
             <article><span>4</span><div><h3>Selesai</h3><p>Setiap kali file di GitHub diperbarui, Vercel akan memasang versi baru secara otomatis.</p></div></article>
@@ -575,7 +583,7 @@ python -m pip install -U "yt-dlp[default]"</code></pre>
       </section>
 
       <footer class="site-footer">
-        <div><span class="brand-mark small-mark">U</span><span><strong>Unduh Lagi</strong><small>Panduan sederhana saat layanan unduh sedang error.</small></span></div>
+        <div><span class="brand-mark small-mark">YT</span><span><strong>YT Conv Support</strong><small>Panduan bantuan saat YT Conv sedang error.</small></span></div>
         <p>Halaman panduan, bukan layanan pengunduh. Tautan dan alat pihak ketiga dapat berubah sewaktu-waktu.</p>
       </footer>
     </main>

@@ -41,7 +41,7 @@
     if (text) copyText(text);
   });
 
-  const savedTheme = localStorage.getItem('unduh-lagi-theme');
+  const savedTheme = localStorage.getItem('yt-conv-support-theme');
   const preferredDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
   const initialTheme = savedTheme || (preferredDark ? 'dark' : 'light');
 
@@ -56,7 +56,7 @@
   document.querySelectorAll('.theme-toggle').forEach((button) => {
     button.addEventListener('click', () => {
       const next = root.dataset.theme === 'dark' ? 'light' : 'dark';
-      localStorage.setItem('unduh-lagi-theme', next);
+      localStorage.setItem('yt-conv-support-theme', next);
       applyTheme(next);
     });
   });
@@ -186,12 +186,12 @@
   const progressInputs = [...document.querySelectorAll('[data-progress]')];
   const progressText = document.getElementById('progressText');
   const progressBar = document.getElementById('progressBar');
-  const savedProgress = JSON.parse(localStorage.getItem('unduh-lagi-progress') || '{}');
+  const savedProgress = JSON.parse(localStorage.getItem('yt-conv-support-progress') || '{}');
 
   const updateProgress = () => {
     const state = {};
     progressInputs.forEach((input) => { state[input.dataset.progress] = input.checked; });
-    localStorage.setItem('unduh-lagi-progress', JSON.stringify(state));
+    localStorage.setItem('yt-conv-support-progress', JSON.stringify(state));
     const count = progressInputs.filter((input) => input.checked).length;
     if (progressText) progressText.textContent = `${count}/${progressInputs.length}`;
     if (progressBar) progressBar.style.width = `${progressInputs.length ? (count / progressInputs.length) * 100 : 0}%`;
