@@ -1,410 +1,344 @@
 (() => {
   'use strict';
 
-  const root = document.documentElement;
+  const $ = (selector, scope = document) => scope.querySelector(selector);
+  const $$ = (selector, scope = document) => [...scope.querySelectorAll(selector)];
   const body = document.body;
-  const toast = document.getElementById('toast');
-  const toastText = document.getElementById('toastText');
+  const root = document.documentElement;
+  const toast = $('#toast');
   let toastTimer;
 
-  const showToast = (message = 'Berhasil disalin') => {
-    if (!toast || !toastText) return;
-    toastText.textContent = message;
+  const showToast = (text = 'Tersalin') => {
+    if (!toast) return;
+    toast.textContent = text;
     toast.classList.add('show');
     clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => toast.classList.remove('show'), 1800);
+    toastTimer = setTimeout(() => toast.classList.remove('show'), 1600);
   };
 
   const copyText = async (text) => {
-    if (!text) return false;
     try {
       await navigator.clipboard.writeText(text);
-      return true;
     } catch {
       const area = document.createElement('textarea');
       area.value = text;
-      area.setAttribute('readonly', '');
       area.style.position = 'fixed';
       area.style.opacity = '0';
       document.body.appendChild(area);
       area.select();
-      const copied = document.execCommand('copy');
+      document.execCommand('copy');
       area.remove();
-      return copied;
     }
+    showToast();
   };
 
-  document.addEventListener('click', async (event) => {
-    const button = event.target.closest('[data-copy-target]');
-    if (!button) return;
-    const target = document.getElementById(button.dataset.copyTarget);
-    const copied = await copyText(target?.textContent?.trim() || '');
-    showToast(copied ? 'Perintah berhasil disalin' : 'Tidak bisa menyalin');
+  document.addEventListener('click', (event) => {
+    const trigger = event.target.closest('[data-copy-target],[data-copy-text]');
+    if (!trigger) return;
+    const target = trigger.dataset.copyTarget ? $(`#${trigger.dataset.copyTarget}`) : null;
+    const text = trigger.dataset.copyText || target?.textContent?.trim();
+    if (text) copyText(text);
   });
 
-  const preferredTheme = localStorage.getItem('yt-conv-support-theme') ||
-    (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-
+  const savedTheme = localStorage.getItem('ytcs-theme');
+  const initialTheme = savedTheme || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
   const applyTheme = (theme) => {
     root.dataset.theme = theme;
-    const label = document.getElementById('themeLabel');
-    if (label) label.textContent = theme === 'dark' ? 'Mode terang' : 'Mode gelap';
-    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', theme === 'dark' ? '#181918' : '#f7f7f5');
+    $('#themeText').textContent = theme === 'dark' ? 'Mode terang' : 'Mode gelap';
+    $('meta[name="theme-color"]')?.setAttribute('content', theme === 'dark' ? '#171716' : '#f7f7f5');
   };
-
-  applyTheme(preferredTheme);
-  document.querySelectorAll('.theme-toggle').forEach((button) => button.addEventListener('click', () => {
+  applyTheme(initialTheme);
+  $$('.theme-btn').forEach((btn) => btn.addEventListener('click', () => {
     const next = root.dataset.theme === 'dark' ? 'light' : 'dark';
-    localStorage.setItem('yt-conv-support-theme', next);
+    localStorage.setItem('ytcs-theme', next);
     applyTheme(next);
   }));
 
-  const menuButton = document.getElementById('menuButton');
-  const sidebarBackdrop = document.getElementById('sidebarBackdrop');
+  const menuBtn = $('#menuBtn');
+  const backdrop = $('#backdrop');
   const setMenu = (open) => {
     body.classList.toggle('menu-open', open);
-    menuButton?.setAttribute('aria-expanded', String(open));
-    if (sidebarBackdrop) sidebarBackdrop.hidden = !open;
+    menuBtn?.setAttribute('aria-expanded', String(open));
+    if (backdrop) backdrop.hidden = !open;
   };
-  menuButton?.addEventListener('click', () => setMenu(!body.classList.contains('menu-open')));
-  sidebarBackdrop?.addEventListener('click', () => setMenu(false));
-  document.querySelectorAll('.side-nav a').forEach((link) => link.addEventListener('click', () => setMenu(false)));
-  document.addEventListener('keydown', (event) => { if (event.key === 'Escape') setMenu(false); });
+  menuBtn?.addEventListener('click', () => setMenu(!body.classList.contains('menu-open')));
+  backdrop?.addEventListener('click', () => setMenu(false));
+  $$('.nav-link').forEach((link) => link.addEventListener('click', () => setMenu(false)));
 
-  const videoUrl = document.getElementById('videoUrl');
-  const formatSelect = document.getElementById('formatSelect');
-  const qualitySelect = document.getElementById('qualitySelect');
-  const cookieSelect = document.getElementById('cookieSelect');
-  const qualityField = document.getElementById('qualityField');
-  const cookieField = document.getElementById('cookieField');
-  const generatedCommand = document.getElementById('generatedCommand');
-  const commandLabel = document.getElementById('commandLabel');
-  const builderTip = document.getElementById('builderTip');
-  const urlMessage = document.getElementById('urlMessage');
-  const installHelpLink = document.getElementById('installHelpLink');
-  let platform = 'windows';
+  const platformText = (key) => ({ windows: 'Windows', linux: 'Linux', macos: 'macOS', android: 'Android', ios: 'iPhone/iPad', chromeos: 'ChromeOS' }[key] || 'Perangkat');
 
-  const platformNames = { windows: 'Windows', linux: 'Linux', macos: 'macOS', android: 'Android Termux' };
-  const validateUrl = (value) => {
-    if (!value.trim()) return { valid: true, value: 'TAUTAN_VIDEO', placeholder: true };
-    try {
-      const parsed = new URL(value.trim());
-      if (!['http:', 'https:'].includes(parsed.protocol)) throw new Error('bad protocol');
-      return { valid: true, value: parsed.href, placeholder: false };
-    } catch {
-      return { valid: false, value: 'TAUTAN_VIDEO', placeholder: true };
+  function detectDevice() {
+    const ua = navigator.userAgent || '';
+    const uaPlatform = navigator.userAgentData?.platform || navigator.platform || '';
+    const touchMac = /Mac/i.test(uaPlatform) && navigator.maxTouchPoints > 1;
+    let key = 'linux';
+    if (/CrOS/i.test(ua)) key = 'chromeos';
+    else if (/Android/i.test(ua)) key = 'android';
+    else if (/iPhone|iPad|iPod/i.test(ua) || touchMac) key = 'ios';
+    else if (/Win/i.test(uaPlatform) || /Windows/i.test(ua)) key = 'windows';
+    else if (/Mac/i.test(uaPlatform) || /Macintosh/i.test(ua)) key = 'macos';
+    else if (/Linux/i.test(uaPlatform) || /Linux/i.test(ua)) key = 'linux';
+
+    let browser = 'browser';
+    if (/Edg\//.test(ua)) browser = 'Edge';
+    else if (/Firefox\//.test(ua)) browser = 'Firefox';
+    else if (/Chrome\//.test(ua) || /CriOS\//.test(ua)) browser = 'Chrome';
+    else if (/Safari\//.test(ua)) browser = 'Safari';
+
+    let guide = key;
+    if (key === 'linux') {
+      if (/Ubuntu/i.test(ua)) guide = 'ubuntu';
+      else if (/Fedora/i.test(ua)) guide = 'fedora';
+      else if (/Arch/i.test(ua)) guide = 'arch';
+      else guide = 'universal-linux';
     }
-  };
-
-  const cookieArg = (value, currentPlatform) => {
-    if (value === 'none') return '';
-    if (value === 'file') {
-      return currentPlatform === 'windows'
-        ? '--cookies "%USERPROFILE%\\Downloads\\cookies.txt" '
-        : '--cookies "$HOME/Downloads/cookies.txt" ';
-    }
-    if (['chrome', 'edge', 'firefox'].includes(value)) return `--cookies-from-browser ${value} `;
-    return '';
-  };
-
-  const buildCommand = () => {
-    if (!generatedCommand) return;
-    const checked = validateUrl(videoUrl?.value || '');
-    const url = checked.value;
-    const format = formatSelect?.value || 'mp4';
-    const quality = qualitySelect?.value || 'best';
-    const cookies = cookieSelect?.value || 'none';
-
-    if (urlMessage) {
-      urlMessage.classList.toggle('error', !checked.valid);
-      urlMessage.textContent = checked.valid
-        ? (checked.placeholder ? 'Boleh dikosongkan. Nanti tertulis TAUTAN_VIDEO.' : 'Tautan terlihat benar dan sudah dimasukkan.')
-        : 'Tautan belum benar. Awali dengan http:// atau https://';
-    }
-
-    if (qualityField) qualityField.hidden = format === 'mp3';
-    if (cookieField) cookieField.hidden = platform === 'android';
-
-    const browserCookies = platform === 'android' ? '' : cookieArg(cookies, platform);
-    const output = platform === 'windows'
-      ? '-o "%USERPROFILE%\\Downloads\\%(title)s.%(ext)s"'
-      : platform === 'android'
-        ? '-P "/sdcard/Download"'
-        : '-o "$HOME/Downloads/%(title)s.%(ext)s"';
-
-    let command;
-    if (format === 'mp3') {
-      command = `yt-dlp ${browserCookies}-x --audio-format mp3 --audio-quality 0 ${output} "${url}"`;
-    } else {
-      const selector = quality === 'best' ? 'bv*+ba/b' : `bv*[height<=${quality}]+ba/b[height<=${quality}]`;
-      command = `yt-dlp ${browserCookies}-f "${selector}" --merge-output-format mp4 ${output} "${url}"`;
-    }
-
-    generatedCommand.textContent = command.replace(/\s{2,}/g, ' ').trim();
-    if (commandLabel) commandLabel.textContent = `Perintah untuk ${platformNames[platform]}`;
-    if (builderTip) {
-      builderTip.textContent = platform === 'windows'
-        ? 'File akan masuk ke folder Downloads Windows.'
-        : platform === 'android'
-          ? 'File masuk ke Download Android. Jalankan termux-setup-storage lebih dulu.'
-          : 'File akan masuk ke folder Downloads milik pengguna saat ini.';
-    }
-    if (installHelpLink) installHelpLink.dataset.targetGuide = platform === 'linux' ? 'ubuntu' : platform;
-  };
-
-  const selectBuilderPlatform = (nextPlatform) => {
-    platform = nextPlatform;
-    document.querySelectorAll('.builder-tab').forEach((item) => {
-      const active = item.dataset.platform === platform;
-      item.classList.toggle('active', active);
-      item.setAttribute('aria-selected', String(active));
-    });
-    buildCommand();
-  };
-
-  document.querySelectorAll('.builder-tab').forEach((tab) => tab.addEventListener('click', () => selectBuilderPlatform(tab.dataset.platform || 'windows')));
-  [videoUrl, formatSelect, qualitySelect, cookieSelect].forEach((control) => control?.addEventListener(control === videoUrl ? 'input' : 'change', buildCommand));
-  buildCommand();
-
-  const guides = {
-    windows: {
-      icon: 'W', kicker: 'Komputer', title: 'Windows 10/11', status: 'Paling mudah', shell: 'CMD sebagai Administrator',
-      description: 'Gunakan Winget agar yt-dlp dan FFmpeg terpasang otomatis tanpa memindahkan file secara manual.',
-      openTitle: 'Buka CMD sebagai Administrator', openText: 'Tekan tombol Windows, ketik CMD, lalu pilih Run as administrator.',
-      installNote: 'Salin dua baris ini. Tunggu baris pertama selesai sebelum baris kedua berjalan.',
-      install: 'winget install --id yt-dlp.yt-dlp --exact --accept-source-agreements --accept-package-agreements\nwinget install --id Gyan.FFmpeg --exact --accept-source-agreements --accept-package-agreements',
-      check: 'yt-dlp --version\nffmpeg -version',
-      download: 'yt-dlp -f "bv*+ba/b" --merge-output-format mp4 -o "%USERPROFILE%\\Downloads\\%(title)s.%(ext)s" "TAUTAN_VIDEO"',
-      downloadNote: 'Ganti TAUTAN_VIDEO dengan tautan yang ingin diunduh.',
-      note: '<strong>Setelah memasang:</strong> tutup CMD dan buka lagi agar perintah baru terbaca.'
-    },
-    ubuntu: {
-      icon: 'U', kicker: 'Linux berbasis Debian', title: 'Ubuntu, Debian, Mint, Pop!_OS, Zorin, dan Kali', status: 'APT', shell: 'Terminal',
-      description: 'Cara ini cocok untuk keluarga Debian. Nama paket dapat sedikit berbeda pada rilis lama, jadi perbarui daftar paket terlebih dahulu.',
-      openTitle: 'Buka Terminal', openText: 'Tekan Ctrl + Alt + T atau cari aplikasi Terminal dari menu aplikasi.',
-      installNote: 'Perbarui daftar paket, lalu pasang yt-dlp dan FFmpeg.',
-      install: 'sudo apt update\nsudo apt install -y yt-dlp ffmpeg',
-      check: 'yt-dlp --version\nffmpeg -version',
-      download: 'yt-dlp -f "bv*+ba/b" --merge-output-format mp4 -o "$HOME/Downloads/%(title)s.%(ext)s" "TAUTAN_VIDEO"',
-      downloadNote: 'Hasil akan masuk ke folder Downloads di Home.',
-      note: '<strong>Bila yt-dlp terlalu lama:</strong> gunakan kartu “Linux distro lainnya” untuk memasang versi resmi langsung dari GitHub.'
-    },
-    fedora: {
-      icon: 'F', kicker: 'Linux', title: 'Fedora Workstation', status: 'DNF', shell: 'Terminal',
-      description: 'Fedora menyediakan paket yt-dlp dan ffmpeg-free dari repositori resminya.',
-      openTitle: 'Buka Terminal', openText: 'Cari Terminal dari daftar aplikasi atau tekan tombol Super lalu ketik Terminal.',
-      installNote: 'Pasang yt-dlp dan FFmpeg Free dengan DNF.',
-      install: 'sudo dnf install -y yt-dlp ffmpeg-free',
-      check: 'yt-dlp --version\nffmpeg -version',
-      download: 'yt-dlp -f "bv*+ba/b" --merge-output-format mp4 -o "$HOME/Downloads/%(title)s.%(ext)s" "TAUTAN_VIDEO"',
-      downloadNote: 'Untuk MP4 biasa, paket ini umumnya sudah cukup.',
-      note: '<strong>Catatan:</strong> ffmpeg-free memiliki codec lebih terbatas. Bila konversi MP3 tertentu gagal, gunakan build FFmpeg lengkap yang sesuai dengan Fedora.'
-    },
-    arch: {
-      icon: 'A', kicker: 'Linux berbasis Arch', title: 'Arch, Manjaro, EndeavourOS, Garuda, dan CachyOS', status: 'Pacman', shell: 'Terminal',
-      description: 'Paket yt-dlp dan FFmpeg tersedia dari repositori Arch dan dipasang bersama pembaruan sistem.',
-      openTitle: 'Buka Terminal', openText: 'Buka Konsole, GNOME Terminal, Kitty, atau terminal bawaan distro.',
-      installNote: 'Perbarui sistem dan pasang kedua paket.',
-      install: 'sudo pacman -Syu --needed yt-dlp ffmpeg',
-      check: 'yt-dlp --version\nffmpeg -version',
-      download: 'yt-dlp -f "bv*+ba/b" --merge-output-format mp4 -o "$HOME/Downloads/%(title)s.%(ext)s" "TAUTAN_VIDEO"',
-      downloadNote: 'Hasil akan masuk ke Downloads.',
-      note: '<strong>Tips:</strong> jangan melakukan partial upgrade pada Arch. Biarkan perintah <code>-Syu</code> memperbarui sistem terlebih dahulu.'
-    },
-    opensuse: {
-      icon: 'S', kicker: 'Linux', title: 'openSUSE Tumbleweed dan Leap', status: 'Zypper', shell: 'Terminal',
-      description: 'Tumbleweed biasanya memiliki paket lebih baru. Pada Leap, paket yt-dlp atau FFmpeg dapat membutuhkan repositori tambahan.',
-      openTitle: 'Buka Terminal', openText: 'Cari Konsole atau Terminal dari menu aplikasi.',
-      installNote: 'Coba paket resmi terlebih dahulu.',
-      install: 'sudo zypper refresh\nsudo zypper install yt-dlp ffmpeg',
-      check: 'yt-dlp --version\nffmpeg -version',
-      download: 'yt-dlp -f "bv*+ba/b" --merge-output-format mp4 -o "$HOME/Downloads/%(title)s.%(ext)s" "TAUTAN_VIDEO"',
-      downloadNote: 'Gunakan folder Downloads agar mudah ditemukan.',
-      note: '<strong>Bila paket tidak ditemukan:</strong> pilih “Linux distro lainnya” untuk yt-dlp, lalu pasang FFmpeg melalui YaST Software atau repositori multimedia yang kamu percaya.'
-    },
-    alpine: {
-      icon: 'Al', kicker: 'Linux ringan', title: 'Alpine Linux dan postmarketOS', status: 'APK', shell: 'Terminal',
-      description: 'Alpine memakai package manager APK. Pada postmarketOS, sudo dapat digunakan sebagai pengganti doas.',
-      openTitle: 'Buka Terminal', openText: 'Masuk ke shell Alpine atau buka terminal pada postmarketOS.',
-      installNote: 'Pasang yt-dlp dan FFmpeg dari repositori community.',
-      install: 'doas apk update\ndoas apk add yt-dlp ffmpeg',
-      check: 'yt-dlp --version\nffmpeg -version',
-      download: 'yt-dlp -f "bv*+ba/b" --merge-output-format mp4 -o "$HOME/Downloads/%(title)s.%(ext)s" "TAUTAN_VIDEO"',
-      downloadNote: 'Buat folder Downloads bila belum ada: mkdir -p "$HOME/Downloads".',
-      note: '<strong>postmarketOS:</strong> bila <code>doas</code> tidak tersedia, ganti dengan <code>sudo</code>.'
-    },
-    'universal-linux': {
-      icon: '∞', kicker: 'Linux universal', title: 'Linux distro lainnya', status: 'Cara universal', shell: 'Terminal',
-      description: 'Gunakan binary resmi yt-dlp di folder pengguna. Cara ini tidak mengubah file sistem utama dan cocok untuk banyak distro.',
-      openTitle: 'Buka Terminal', openText: 'Gunakan terminal bawaan distro. Pastikan curl dan FFmpeg tersedia.',
-      installNote: 'Perintah ini memasang yt-dlp ke ~/.local/bin. FFmpeg tetap perlu dipasang dari package manager distro.',
-      install: 'mkdir -p "$HOME/.local/bin"\ncurl -L https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp -o "$HOME/.local/bin/yt-dlp"\nchmod a+rx "$HOME/.local/bin/yt-dlp"\necho \'export PATH="$HOME/.local/bin:$PATH"\' >> "$HOME/.profile"\nexport PATH="$HOME/.local/bin:$PATH"',
-      check: 'yt-dlp --version\nffmpeg -version',
-      download: 'yt-dlp -f "bv*+ba/b" --merge-output-format mp4 -o "$HOME/Downloads/%(title)s.%(ext)s" "TAUTAN_VIDEO"',
-      downloadNote: 'Buat folder Downloads jika belum ada.',
-      note: '<strong>Perlu Python:</strong> binary universal <code>yt-dlp</code> membutuhkan Python yang didukung. Untuk PC x86_64 tanpa Python, unduh binary <code>yt-dlp_linux</code> dari rilis resmi.'
-    },
-    macos: {
-      icon: 'M', kicker: 'Komputer Apple', title: 'macOS', status: 'Homebrew', shell: 'Terminal',
-      description: 'Homebrew memasang yt-dlp dan FFmpeg sekaligus dan memudahkan pembaruan.',
-      openTitle: 'Buka Terminal', openText: 'Buka Spotlight dengan Command + Space, ketik Terminal, lalu tekan Enter.',
-      installNote: 'Pastikan Homebrew sudah terpasang, lalu jalankan satu baris ini.',
-      install: 'brew install yt-dlp ffmpeg',
-      check: 'yt-dlp --version\nffmpeg -version',
-      download: 'yt-dlp -f "bv*+ba/b" --merge-output-format mp4 -o "$HOME/Downloads/%(title)s.%(ext)s" "TAUTAN_VIDEO"',
-      downloadNote: 'Hasil akan muncul di folder Downloads.',
-      note: '<strong>Belum punya Homebrew?</strong> Pasang dari situs resmi Homebrew, lalu buka ulang Terminal.'
-    },
-    android: {
-      icon: 'An', kicker: 'HP dan tablet', title: 'Android lewat Termux', status: 'APK langsung', shell: 'Termux',
-      description: 'Termux membuat lingkungan terminal ringan di Android. File hasil unduhan masuk ke folder Download HP.',
-      openTitle: 'Unduh dan buka Termux', openText: 'Gunakan tombol APK langsung di bawah panduan ini. Setelah instal, buka Termux.',
-      installNote: 'Izinkan penyimpanan, perbarui paket, lalu pasang Python, FFmpeg, dan yt-dlp.',
-      install: 'termux-setup-storage\npkg update -y && pkg upgrade -y\npkg install -y python ffmpeg\npython -m pip install -U "yt-dlp[default]"',
-      check: 'yt-dlp --version\nffmpeg -version',
-      download: 'yt-dlp -f "bv*+ba/b" --merge-output-format mp4 -P "/sdcard/Download" "TAUTAN_VIDEO"',
-      downloadNote: 'Saat muncul permintaan izin penyimpanan, tekan Izinkan.',
-      note: '<strong>Android 12 ke atas:</strong> sistem dapat menghentikan proses yang terlalu berat. Biarkan Termux tetap terbuka selama unduhan.',
-      action: '<a class="button primary guide-extra-button" href="https://f-droid.org/repo/com.termux_1022.apk" target="_blank" rel="noopener noreferrer" download>Unduh Termux APK</a>'
-    },
-    chromeos: {
-      icon: 'C', kicker: 'Chromebook', title: 'ChromeOS / Chromebook', status: 'Linux Debian', shell: 'Terminal Linux',
-      description: 'Aktifkan Linux Development Environment di Pengaturan ChromeOS. Lingkungannya berbasis Debian.',
-      openTitle: 'Aktifkan Linux Development Environment', openText: 'Buka Settings → About ChromeOS → Developers → Linux development environment, lalu pilih Turn on.',
-      installNote: 'Setelah aplikasi Terminal Linux terbuka, gunakan APT.',
-      install: 'sudo apt update\nsudo apt install -y yt-dlp ffmpeg',
-      check: 'yt-dlp --version\nffmpeg -version',
-      download: 'yt-dlp -f "bv*+ba/b" --merge-output-format mp4 -o "$HOME/Downloads/%(title)s.%(ext)s" "TAUTAN_VIDEO"',
-      downloadNote: 'Folder Linux terpisah dari Downloads ChromeOS. Pindahkan file melalui aplikasi Files bila perlu.',
-      note: '<strong>Chromebook sekolah/kantor:</strong> administrator dapat menonaktifkan Linux. Dalam kondisi itu gunakan pilihan web.'
-    },
-    steamdeck: {
-      icon: 'SD', kicker: 'Konsol Linux', title: 'Steam Deck / SteamOS', status: 'Desktop Mode', shell: 'Konsole',
-      description: 'SteamOS berbasis Arch, tetapi sistemnya bersifat read-only. Perubahan paket sistem dapat hilang setelah pembaruan besar.',
-      openTitle: 'Masuk ke Desktop Mode', openText: 'Tekan Steam → Power → Switch to Desktop, lalu buka Konsole.',
-      installNote: 'Cara paling mudah adalah memakai pipx untuk yt-dlp. FFmpeg biasanya sudah tersedia; cek lebih dulu.',
-      install: 'python3 -m ensurepip --user\npython3 -m pip install --user -U "yt-dlp[default]"',
-      check: 'python3 -m yt_dlp --version\nffmpeg -version',
-      download: 'python3 -m yt_dlp -f "bv*+ba/b" --merge-output-format mp4 -o "$HOME/Downloads/%(title)s.%(ext)s" "TAUTAN_VIDEO"',
-      downloadNote: 'Perintah memakai python3 -m yt_dlp agar tetap terbaca tanpa mengubah PATH.',
-      note: '<strong>Alternatif:</strong> bila Python atau FFmpeg tidak tersedia, gunakan pilihan web melalui browser Desktop Mode.'
-    },
-    ios: {
-      icon: 'i', kicker: 'HP dan tablet Apple', title: 'iPhone dan iPad', status: 'Tanpa terminal', shell: 'Safari',
-      description: 'iOS tidak memiliki cara yt-dlp + FFmpeg yang sesederhana Windows, Linux, macOS, atau Android tanpa aplikasi dan pengaturan tambahan.',
-      openTitle: 'Buka Safari', openText: 'Gunakan salah satu pilihan web pada bagian berikutnya.',
-      installNote: 'Tidak perlu memasang yt-dlp. Pilih web sesuai kebutuhan.',
-      install: 'YT1s: khusus MP4\nnoTube: pilihan cadangan\nCobalt: TikTok dan media sosial',
-      check: 'Tidak ada perintah yang perlu diperiksa.',
-      download: 'Buka bagian “Pilihan web” lalu pilih layanan yang sesuai.',
-      downloadNote: 'Simpan hasil ke aplikasi Files saat Safari menampilkan pilihan unduhan.',
-      note: '<strong>Keamanan:</strong> jangan memasukkan Apple ID, kata sandi, kode OTP, atau cookies ke situs pihak ketiga.',
-      action: '<a class="button secondary guide-extra-button" href="#pilihan-web">Buka pilihan web</a>'
-    }
-  };
-
-  const guidePanel = document.getElementById('guidePanel');
-  const guideFields = {
-    icon: document.getElementById('guideIcon'), kicker: document.getElementById('guideKicker'), title: document.getElementById('guideTitle'),
-    description: document.getElementById('guideDescription'), status: document.getElementById('guideStatus'), stepOneTitle: document.getElementById('guideStepOneTitle'),
-    stepOneText: document.getElementById('guideStepOneText'), installNote: document.getElementById('guideInstallNote'), shellLabel: document.getElementById('guideShellLabel'),
-    installCode: document.getElementById('guideInstallCode'), checkCode: document.getElementById('guideCheckCode'), downloadCode: document.getElementById('guideDownloadCode'),
-    downloadNote: document.getElementById('guideDownloadNote'), note: document.getElementById('guideNote'), extraAction: document.getElementById('guideExtraAction')
-  };
-
-  const openGuide = (key, shouldScroll = false) => {
-    const guide = guides[key];
-    if (!guide) return;
-    document.querySelectorAll('.device-card').forEach((card) => card.classList.toggle('active', card.dataset.guide === key));
-    guideFields.icon.textContent = guide.icon;
-    guideFields.kicker.textContent = guide.kicker;
-    guideFields.title.textContent = guide.title;
-    guideFields.description.textContent = guide.description;
-    guideFields.status.textContent = guide.status;
-    guideFields.stepOneTitle.textContent = guide.openTitle;
-    guideFields.stepOneText.textContent = guide.openText;
-    guideFields.installNote.textContent = guide.installNote;
-    guideFields.shellLabel.textContent = guide.shell;
-    guideFields.installCode.textContent = guide.install;
-    guideFields.checkCode.textContent = guide.check;
-    guideFields.downloadCode.textContent = guide.download;
-    guideFields.downloadNote.textContent = guide.downloadNote;
-    guideFields.note.innerHTML = guide.note;
-    guideFields.extraAction.innerHTML = guide.action || '';
-    localStorage.setItem('yt-conv-support-guide', key);
-    if (shouldScroll) guidePanel?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  };
-
-  document.querySelectorAll('.device-card').forEach((card) => card.addEventListener('click', () => openGuide(card.dataset.guide, true)));
-  const savedGuide = localStorage.getItem('yt-conv-support-guide');
-  openGuide(savedGuide && guides[savedGuide] ? savedGuide : 'windows');
-
-  const deviceSearch = document.getElementById('deviceSearch');
-  const deviceCards = [...document.querySelectorAll('.device-card')];
-  const deviceEmpty = document.getElementById('deviceEmpty');
-  let deviceFilter = 'all';
-
-  const filterDevices = () => {
-    const query = (deviceSearch?.value || '').trim().toLowerCase();
-    let visible = 0;
-    deviceCards.forEach((card) => {
-      const categories = (card.dataset.category || '').split(' ');
-      const categoryMatch = deviceFilter === 'all' || categories.includes(deviceFilter);
-      const haystack = `${card.textContent} ${card.dataset.keywords || ''}`.toLowerCase();
-      const textMatch = !query || haystack.includes(query);
-      card.hidden = !(categoryMatch && textMatch);
-      if (!card.hidden) visible += 1;
-    });
-    if (deviceEmpty) deviceEmpty.hidden = visible !== 0;
-  };
-  deviceSearch?.addEventListener('input', filterDevices);
-  document.querySelectorAll('.filter-chip').forEach((chip) => chip.addEventListener('click', () => {
-    deviceFilter = chip.dataset.filter || 'all';
-    document.querySelectorAll('.filter-chip').forEach((item) => item.classList.toggle('active', item === chip));
-    filterDevices();
-  }));
-
-  document.addEventListener('click', (event) => {
-    const trigger = event.target.closest('[data-open-guide]');
-    if (!trigger) return;
-    const key = trigger.dataset.openGuide;
-    setTimeout(() => openGuide(key, true), 50);
-  });
-
-  installHelpLink?.addEventListener('click', () => {
-    const key = installHelpLink.dataset.targetGuide || 'windows';
-    setTimeout(() => openGuide(key, true), 50);
-  });
-
-  document.querySelectorAll('[data-jump-platform]').forEach((link) => link.addEventListener('click', () => selectBuilderPlatform(link.dataset.jumpPlatform || 'windows')));
-
-  const faqSearch = document.getElementById('faqSearch');
-  const faqItems = [...document.querySelectorAll('.faq-item')];
-  const faqEmpty = document.getElementById('faqEmpty');
-  faqSearch?.addEventListener('input', () => {
-    const query = faqSearch.value.toLowerCase().trim();
-    let visible = 0;
-    faqItems.forEach((item) => {
-      const haystack = `${item.textContent} ${item.dataset.keywords || ''}`.toLowerCase();
-      const match = !query || haystack.includes(query);
-      item.hidden = !match;
-      if (match) visible += 1;
-    });
-    if (faqEmpty) faqEmpty.hidden = visible !== 0;
-  });
-
-  const navLinks = [...document.querySelectorAll('.nav-link')];
-  const sections = [...document.querySelectorAll('.section-anchor')];
-  if ('IntersectionObserver' in window) {
-    const observer = new IntersectionObserver((entries) => {
-      const visible = entries.filter((entry) => entry.isIntersecting).sort((a,b) => b.intersectionRatio - a.intersectionRatio)[0];
-      if (!visible) return;
-      navLinks.forEach((link) => link.classList.toggle('active', link.getAttribute('href') === `#${visible.target.id}`));
-    }, { rootMargin: '-18% 0px -67% 0px', threshold: [0,.1,.3] });
-    sections.forEach((section) => observer.observe(section));
+    return { key, guide, browser, label: platformText(key) };
   }
 
-  const backTop = document.getElementById('backTop');
-  window.addEventListener('scroll', () => backTop?.classList.toggle('show', window.scrollY > 700), { passive: true });
-  backTop?.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+  const guides = {
+    windows: { icon:'W', type:'Komputer', name:'Windows 10/11', intro:'CMD + Winget.', openTitle:'Buka CMD', openText:'Tekan Start, ketik CMD, lalu buka.', shell:'CMD', install:'winget install yt-dlp.yt-dlp\nwinget install Gyan.FFmpeg', download:'yt-dlp -f "bv*+ba/b" --merge-output-format mp4 -P "%USERPROFILE%\\Downloads" "TAUTAN_VIDEO"', note:'Setelah instalasi, tutup lalu buka CMD lagi.', category:'computer', keywords:'windows 10 11 microsoft winget cmd' },
+    ubuntu: { icon:'U', type:'Linux', name:'Ubuntu & Debian', intro:'Juga cocok untuk Mint, Pop!_OS, Zorin, dan Kali.', openTitle:'Buka Terminal', openText:'Tekan Ctrl + Alt + T.', shell:'Terminal', install:'sudo apt update && sudo apt install -y yt-dlp ffmpeg', download:'yt-dlp -f "bv*+ba/b" --merge-output-format mp4 -P "$HOME/Downloads" "TAUTAN_VIDEO"', note:'Pilih ini untuk distro berbasis Ubuntu/Debian.', category:'linux computer', keywords:'ubuntu debian mint pop zorin kali apt' },
+    fedora: { icon:'F', type:'Linux', name:'Fedora', intro:'Memakai DNF.', openTitle:'Buka Terminal', openText:'Buka aplikasi Terminal.', shell:'Terminal', install:'sudo dnf install -y yt-dlp ffmpeg-free', download:'yt-dlp -f "bv*+ba/b" --merge-output-format mp4 -P "$HOME/Downloads" "TAUTAN_VIDEO"', note:'Jika format tertentu gagal, gunakan pilihan web cadangan.', category:'linux computer', keywords:'fedora dnf redhat workstation' },
+    arch: { icon:'A', type:'Linux', name:'Arch & turunannya', intro:'Arch, Manjaro, EndeavourOS, Garuda, CachyOS.', openTitle:'Buka Terminal', openText:'Buka aplikasi Terminal.', shell:'Terminal', install:'sudo pacman -Syu --needed yt-dlp ffmpeg', download:'yt-dlp -f "bv*+ba/b" --merge-output-format mp4 -P "$HOME/Downloads" "TAUTAN_VIDEO"', note:'Perintah ini memakai Pacman.', category:'linux computer', keywords:'arch manjaro endeavour garuda cachyos pacman' },
+    opensuse: { icon:'S', type:'Linux', name:'openSUSE', intro:'Tumbleweed dan Leap.', openTitle:'Buka Terminal', openText:'Buka aplikasi Terminal.', shell:'Terminal', install:'sudo zypper install yt-dlp ffmpeg', download:'yt-dlp -f "bv*+ba/b" --merge-output-format mp4 -P "$HOME/Downloads" "TAUTAN_VIDEO"', note:'Jika FFmpeg tidak tersedia, gunakan paket multimedia dari repositori distro.', category:'linux computer', keywords:'opensuse tumbleweed leap zypper suse' },
+    alpine: { icon:'Al', type:'Linux', name:'Alpine Linux', intro:'Memakai APK.', openTitle:'Buka Terminal', openText:'Buka terminal Alpine.', shell:'Terminal', install:'sudo apk add yt-dlp ffmpeg', download:'yt-dlp -f "bv*+ba/b" --merge-output-format mp4 -P "$HOME/Downloads" "TAUTAN_VIDEO"', note:'Juga dapat dipakai pada sistem berbasis Alpine.', category:'linux computer', keywords:'alpine postmarketos apk' },
+    'universal-linux': { icon:'∞', type:'Linux', name:'Linux terdeteksi', intro:'Pilih distro di atas bila kamu tahu namanya.', openTitle:'Buka Terminal', openText:'Cari aplikasi Terminal.', shell:'Terminal', install:'python3 -m pip install --user -U yt-dlp\nffmpeg -version', download:'yt-dlp -f "bv*+ba/b" --merge-output-format mp4 -P "$HOME/Downloads" "TAUTAN_VIDEO"', note:'Baris kedua hanya mengecek FFmpeg. Bila tidak ditemukan, pasang FFmpeg lewat Software Manager.', category:'linux computer', keywords:'linux universal distro lain python pip' },
+    macos: { icon:'M', type:'Komputer', name:'macOS', intro:'MacBook dan iMac.', openTitle:'Buka Terminal', openText:'Buka Spotlight, ketik Terminal.', shell:'Terminal', install:'brew install yt-dlp ffmpeg', download:'yt-dlp -f "bv*+ba/b" --merge-output-format mp4 -P "$HOME/Downloads" "TAUTAN_VIDEO"', note:'Perintah ini membutuhkan Homebrew.', category:'computer', keywords:'macos macbook imac apple homebrew brew' },
+    android: { icon:'An', type:'HP', name:'Android + Termux', intro:'Samsung, Xiaomi, OPPO, Vivo, Realme, dan lainnya.', openTitle:'Pasang Termux', openText:'Unduh APK dari tombol di bawah.', shell:'Termux', install:'pkg update -y && pkg install -y python ffmpeg\npip install -U yt-dlp\ntermux-setup-storage', download:'yt-dlp -f "bv*+ba/b" --merge-output-format mp4 -P "/sdcard/Download" "TAUTAN_VIDEO"', note:'Saat diminta izin penyimpanan, tekan Izinkan.', category:'mobile', keywords:'android samsung xiaomi oppo vivo realme termux', extra:'termux' },
+    chromeos: { icon:'C', type:'Komputer', name:'ChromeOS / Chromebook', intro:'Gunakan Linux Development Environment.', openTitle:'Aktifkan Linux', openText:'Settings → Developers → Linux development environment.', shell:'Linux Terminal', install:'sudo apt update && sudo apt install -y yt-dlp ffmpeg', download:'yt-dlp -f "bv*+ba/b" --merge-output-format mp4 -P "$HOME/Downloads" "TAUTAN_VIDEO"', note:'Folder Linux berbeda dari folder Downloads ChromeOS.', category:'linux computer', keywords:'chromeos chromebook cros linux development' },
+    steamdeck: { icon:'SD', type:'Konsol', name:'Steam Deck', intro:'Masuk ke Desktop Mode.', openTitle:'Buka Konsole', openText:'Desktop Mode → buka Konsole.', shell:'Konsole', install:'python3 -m pip install --user -U yt-dlp\nffmpeg -version', download:'yt-dlp -f "bv*+ba/b" --merge-output-format mp4 -P "$HOME/Downloads" "TAUTAN_VIDEO"', note:'Jika FFmpeg tidak tersedia, gunakan pilihan web agar tidak mengubah SteamOS.', category:'linux computer', keywords:'steam deck steamos desktop mode' },
+    ios: { icon:'i', type:'HP', name:'iPhone & iPad', intro:'Gunakan pilihan web.', openTitle:'Buka Safari', openText:'Pilih salah satu web cadangan.', shell:'Tidak perlu terminal', install:'Tidak perlu memasang yt-dlp.', download:'Buka bagian “Tanpa instalasi” di bawah.', note:'iPhone/iPad tidak menjalankan Termux Android.', category:'mobile', keywords:'iphone ipad ios safari apple' }
+  };
+
+  const deviceOrder = ['windows','ubuntu','fedora','arch','opensuse','alpine','universal-linux','macos','android','chromeos','steamdeck','ios'];
+  const detected = detectDevice();
+  let selectedGuide = detected.guide;
+  let deviceFilter = 'all';
+
+  const detectedIcon = $('#detectedIcon');
+  const detectedTitle = $('#detectedTitle');
+  const detectedText = $('#detectedText');
+  if (detectedIcon) detectedIcon.textContent = guides[selectedGuide]?.icon || '?';
+  if (detectedTitle) detectedTitle.textContent = detected.key === 'linux' ? 'Linux terdeteksi' : detected.label;
+  if (detectedText) detectedText.textContent = detected.key === 'linux'
+    ? 'Nama distro tidak selalu terlihat. Pilih distro bila perlu.'
+    : `${detected.browser} • panduan sudah disiapkan.`;
+
+  function renderDevices() {
+    const list = $('#deviceList');
+    const query = ($('#deviceSearch')?.value || '').toLowerCase().trim();
+    if (!list) return;
+    list.innerHTML = '';
+    let count = 0;
+    deviceOrder.forEach((key) => {
+      const item = guides[key];
+      const matchFilter = deviceFilter === 'all' || item.category.includes(deviceFilter);
+      const matchQuery = !query || `${item.name} ${item.intro} ${item.keywords}`.toLowerCase().includes(query);
+      if (!matchFilter || !matchQuery) return;
+      count += 1;
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = `device-btn${key === selectedGuide ? ' active' : ''}`;
+      btn.dataset.guide = key;
+      btn.innerHTML = `<span class="device-badge">${item.icon}</span><span><strong>${item.name}</strong><small>${item.intro}</small></span>`;
+      btn.addEventListener('click', () => selectGuide(key, true));
+      list.appendChild(btn);
+    });
+    $('#deviceEmpty').hidden = count > 0;
+  }
+
+  function selectGuide(key, scroll = false) {
+    const guide = guides[key] || guides.windows;
+    selectedGuide = key;
+    $('#guideLogo').textContent = guide.icon;
+    $('#guideType').textContent = guide.type;
+    $('#guideTitle').textContent = guide.name;
+    $('#guideIntro').textContent = guide.intro;
+    $('#openTitle').textContent = guide.openTitle;
+    $('#openText').textContent = guide.openText;
+    $('#shellName').textContent = guide.shell;
+    $('#installText').textContent = key === 'ios' ? 'Tidak perlu instalasi.' : 'Salin lalu jalankan.';
+    $('#installCode').textContent = guide.install;
+    $('#downloadCode').textContent = guide.download;
+    $('#guideNote').textContent = guide.note;
+    const extra = $('#guideExtra');
+    extra.innerHTML = guide.extra === 'termux'
+      ? '<a class="button primary guide-extra-btn" href="https://f-droid.org/repo/com.termux_1022.apk" target="_blank" rel="noopener noreferrer">Unduh Termux APK</a>'
+      : '';
+    renderDevices();
+    syncBuilderToGuide(key);
+    if (scroll) $('#guideCard')?.scrollIntoView({ behavior:'smooth', block:'center' });
+  }
+
+  $('#deviceSearch')?.addEventListener('input', renderDevices);
+  $$('#deviceFilters .chip').forEach((chip) => chip.addEventListener('click', () => {
+    deviceFilter = chip.dataset.filter || 'all';
+    $$('#deviceFilters .chip').forEach((c) => c.classList.toggle('active', c === chip));
+    renderDevices();
+  }));
+
+  $('#useDetectedBtn')?.addEventListener('click', () => {
+    selectGuide(detected.guide);
+    $('#guide')?.scrollIntoView({ behavior:'smooth' });
+  });
+
+  let builderPlatform = 'windows';
+  const platformFromGuide = (key) => {
+    if (key === 'android') return 'android';
+    if (key === 'macos') return 'macos';
+    if (key === 'windows') return 'windows';
+    return guides[key]?.category.includes('linux') ? 'linux' : 'windows';
+  };
+  function syncBuilderToGuide(key) {
+    const next = platformFromGuide(key);
+    setBuilderPlatform(next);
+  }
+  function setBuilderPlatform(next) {
+    builderPlatform = next;
+    $$('.platform-tab').forEach((tab) => tab.classList.toggle('active', tab.dataset.platform === next));
+    buildCommand();
+  }
+  $$('.platform-tab').forEach((tab) => tab.addEventListener('click', () => setBuilderPlatform(tab.dataset.platform)));
+
+  function validUrl(value) {
+    if (!value.trim()) return { ok:true, value:'TAUTAN_VIDEO', blank:true };
+    try {
+      const url = new URL(value.trim());
+      if (!['http:','https:'].includes(url.protocol)) throw new Error();
+      return { ok:true, value:url.href, blank:false };
+    } catch { return { ok:false, value:'TAUTAN_VIDEO', blank:true }; }
+  }
+  function cookieArg(mode, platform) {
+    if (mode === 'none') return '';
+    if (mode === 'file') {
+      if (platform === 'windows') return '--cookies "%USERPROFILE%\\Downloads\\cookies.txt" ';
+      if (platform === 'android') return '--cookies "/sdcard/Download/cookies.txt" ';
+      return '--cookies "$HOME/Downloads/cookies.txt" ';
+    }
+    return `--cookies-from-browser ${mode} `;
+  }
+  function buildCommand() {
+    const checked = validUrl($('#videoUrl')?.value || '');
+    const format = $('#format')?.value || 'mp4';
+    const quality = $('#quality')?.value || 'best';
+    let mode = $('#cookieMode')?.value || 'none';
+    if (builderPlatform === 'android' && ['chrome','edge','firefox'].includes(mode)) mode = 'none';
+    const output = builderPlatform === 'windows' ? '-P "%USERPROFILE%\\Downloads"' : builderPlatform === 'android' ? '-P "/sdcard/Download"' : '-P "$HOME/Downloads"';
+    const cookies = cookieArg(mode, builderPlatform);
+    let command;
+    if (format === 'mp3') command = `yt-dlp ${cookies}-x --audio-format mp3 --audio-quality 0 ${output} "${checked.value}"`;
+    else {
+      const selector = quality === 'best' ? 'bv*+ba/b' : `bv*[height<=${quality}]+ba/b[height<=${quality}]`;
+      command = `yt-dlp ${cookies}-f "${selector}" --merge-output-format mp4 ${output} "${checked.value}"`;
+    }
+    $('#resultCode').textContent = command.replace(/\s{2,}/g,' ').trim();
+    $('#resultLabel').textContent = ({windows:'Windows CMD',linux:'Linux Terminal',macos:'macOS Terminal',android:'Android Termux'})[builderPlatform];
+    $('#qualityField').hidden = format === 'mp3';
+    $('#urlHelp').textContent = checked.ok ? (checked.blank ? 'Boleh dikosongkan.' : 'Tautan siap.') : 'Tautan belum benar.';
+    $('#urlHelp').style.color = checked.ok ? '' : 'var(--danger)';
+    $('#resultNote').textContent = builderPlatform === 'android' ? 'File masuk ke Download Android.' : 'File masuk ke folder Downloads.';
+  }
+  ['videoUrl','format','quality','cookieMode'].forEach((id) => {
+    const el = $(`#${id}`);
+    el?.addEventListener(id === 'videoUrl' ? 'input' : 'change', buildCommand);
+  });
+
+  $$('.install-tab').forEach((tab) => tab.addEventListener('click', () => {
+    const manual = tab.dataset.extensionMode === 'manual';
+    $$('.install-tab').forEach((t) => t.classList.toggle('active', t === tab));
+    $('#manualFlow').hidden = !manual;
+    $('#storeFlow').hidden = manual;
+  }));
+
+  const errorSearch = $('#errorSearch');
+  errorSearch?.addEventListener('input', () => {
+    const query = errorSearch.value.toLowerCase().trim();
+    let visible = 0;
+    $$('#errorList details').forEach((item) => {
+      const show = !query || `${item.textContent} ${item.dataset.keywords}`.toLowerCase().includes(query);
+      item.hidden = !show;
+      if (show) visible += 1;
+    });
+    $('#errorEmpty').hidden = visible > 0;
+  });
+
+  const backTop = $('#backTop');
+  const onScroll = () => backTop?.classList.toggle('show', scrollY > 500);
+  addEventListener('scroll', onScroll, { passive:true });
+  backTop?.addEventListener('click', () => scrollTo({ top:0, behavior:'smooth' }));
+
+  const navLinks = $$('.nav-link');
+  if ('IntersectionObserver' in window) {
+    const observer = new IntersectionObserver((entries) => {
+      const current = entries.filter((e) => e.isIntersecting).sort((a,b) => b.intersectionRatio-a.intersectionRatio)[0];
+      if (!current) return;
+      navLinks.forEach((link) => link.classList.toggle('active', link.getAttribute('href') === `#${current.target.id}`));
+    }, { rootMargin:'-20% 0px -65% 0px', threshold:[0,.15,.4] });
+    $$('.anchor').forEach((section) => observer.observe(section));
+  }
+
+  const tour = $('#tour');
+  const tourFocus = $('#tourFocus');
+  const tourPopover = $('#tourPopover');
+  let tourIndex = 0;
+  const tourSteps = [
+    { selector:'#detectedCard', title:'Perangkatmu', text: detected.key === 'linux' ? 'Linux terdeteksi. Pilih distro bila perlu.' : `Panduan ${detected.label} sudah dipilih.` },
+    { selector:'#guideCard', title:'Langkah pemasangan', text:'Salin perintah sesuai perangkat.' },
+    { selector:'.builder-card', title:'Buat perintah', text:'Tempel tautan, pilih MP4 atau MP3.' },
+    { selector:'#extensionSteps', title:'Jika diminta login', text:'Pasang extension lalu ekspor cookies.txt.' },
+    { selector:'#fallback .web-grid', title:'Pilihan cepat', text:'Gunakan web cadangan bila tidak ingin instalasi.' }
+  ];
+
+  function positionTour() {
+    const step = tourSteps[tourIndex];
+    const target = $(step.selector);
+    if (!target || !tourFocus || !tourPopover) return;
+    const rect = target.getBoundingClientRect();
+    const pad = 7;
+    tourFocus.style.left = `${Math.max(6, rect.left-pad)}px`;
+    tourFocus.style.top = `${Math.max(6, rect.top-pad)}px`;
+    tourFocus.style.width = `${Math.min(innerWidth-12, rect.width+pad*2)}px`;
+    tourFocus.style.height = `${Math.min(innerHeight-12, rect.height+pad*2)}px`;
+    const popWidth = Math.min(330, innerWidth-24);
+    const below = rect.bottom + 12;
+    const top = below + 190 < innerHeight ? below : Math.max(12, rect.top - 200);
+    const left = Math.min(innerWidth-popWidth-12, Math.max(12, rect.left));
+    tourPopover.style.left = `${left}px`;
+    tourPopover.style.top = `${top}px`;
+    $('#tourCount').textContent = `${tourIndex+1}/${tourSteps.length}`;
+    $('#tourTitle').textContent = step.title;
+    $('#tourText').textContent = step.text;
+    $('#tourBack').style.visibility = tourIndex === 0 ? 'hidden' : 'visible';
+    $('#tourNext').textContent = tourIndex === tourSteps.length-1 ? 'Selesai' : 'Lanjut';
+  }
+  function showTourStep() {
+    const target = $(tourSteps[tourIndex].selector);
+    target?.scrollIntoView({ behavior:'smooth', block:'center' });
+    setTimeout(positionTour, matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 380);
+  }
+  function startTour() {
+    tourIndex = 0;
+    tour.hidden = false;
+    body.style.overflow = 'hidden';
+    showTourStep();
+  }
+  function closeTour() {
+    tour.hidden = true;
+    body.style.overflow = '';
+    localStorage.setItem('ytcs-tour-seen','1');
+  }
+  $('#startTourBtn')?.addEventListener('click', startTour);
+  $('#tourSkip')?.addEventListener('click', closeTour);
+  $('#tourBack')?.addEventListener('click', () => { if (tourIndex > 0) { tourIndex -= 1; showTourStep(); } });
+  $('#tourNext')?.addEventListener('click', () => {
+    if (tourIndex >= tourSteps.length-1) closeTour();
+    else { tourIndex += 1; showTourStep(); }
+  });
+  addEventListener('resize', () => { if (!tour.hidden) positionTour(); });
+  document.addEventListener('keydown', (event) => { if (event.key === 'Escape' && !tour.hidden) closeTour(); });
+
+  renderDevices();
+  selectGuide(selectedGuide);
+  setBuilderPlatform(platformFromGuide(selectedGuide));
+  buildCommand();
 })();
