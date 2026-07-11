@@ -6,7 +6,7 @@ Website panduan sederhana saat layanan unduh utama sedang error. Isinya mencakup
 - pembuat perintah MP4/MP3 yang bisa langsung disalin
 - cookies dari browser milik sendiri
 - yt-dlp dan FFmpeg di Android lewat Termux
-- pilihan web cadangan
+- pilihan web cadangan: YT1s untuk MP4, noTube, dan Cobalt
 - daftar solusi untuk error umum
 - petunjuk deploy ke Vercel
 
