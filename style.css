@@ -69,3 +69,11 @@ h1,h2,h3,p{overflow-wrap:anywhere}h1{font-size:clamp(29px,4vw,43px);line-height:
 }
 @media(max-width:430px){.learning-panel{padding:11px}.video-shell{min-height:175px}.video-placeholder{padding:15px;gap:10px}.play-button{width:44px;height:44px}.video-placeholder strong{font-size:16px}.chat-main{padding-left:10px;padding-right:10px}.assistant-message>.message-body{width:calc(100% - 35px)}.assistant-avatar{width:26px;height:26px}.device-grid{grid-template-columns:1fr}.hero-actions{grid-template-columns:1fr}.hero-actions .return-button{grid-column:auto}.detected-main{align-items:flex-start}.detected-icon{width:42px;height:42px}.filter-row{overflow:auto;flex-wrap:nowrap;padding-bottom:2px}.filter-chip{white-space:nowrap}.generated-command{margin-left:10px;margin-right:10px}.builder-form{padding:12px}.source-status small{font-size:10px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{transition:none!important;animation:none!important}}
+
+/* YT Conv ecosystem navigation */
+.network-links{padding:10px 0 8px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.network-label{display:block;padding:0 10px 7px;color:var(--muted);font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+.network-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px;padding:0 6px}
+.network-grid a{display:flex;align-items:center;justify-content:center;min-height:34px;padding:7px 8px;border:1px solid var(--line);border-radius:8px;background:var(--surface-2);color:var(--muted);font-size:12px;font-weight:750;text-decoration:none}
+.network-grid a:hover{background:var(--surface-3);color:var(--text)}
+.network-grid a.current{background:var(--text);border-color:var(--text);color:var(--bg);pointer-events:none}
