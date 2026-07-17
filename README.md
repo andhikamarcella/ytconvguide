@@ -1,9 +1,12 @@
 # YT Conv Support
 
-Website bantuan saat YT Conv sedang error. Pengguna memilih perangkat, memasang bahan yang dibutuhkan, lalu menyalin command yt-dlp yang sudah dibuat otomatis.
+Website bantuan YTConv untuk instalasi CLI npm, penggunaan CMD/Termux, command yt-dlp manual, cookies, dan pencarian solusi error.
 
 ## Isi tutorial
 
+- Instalasi resmi YTConv CLI v0.5.4 menggunakan `npm install -g ytconv`.
+- Cara menjalankan `ytconv`, `npx -y ytconv@latest`, dan memperbarui paket.
+- Pusat bantuan untuk error npm, PATH CMD, input paste, cookies, dan runner yt-dlp di Termux.
 - Deteksi Windows, Linux, macOS, Android, iPhone/iPad, dan ChromeOS.
 - Panduan Windows 10/11, Android Termux, Ubuntu/Debian, Fedora, Arch/Manjaro, openSUSE, Alpine, macOS, ChromeOS, SteamOS, NixOS, Void, dan Linux lainnya.
 - Persiapan sebelum yt-dlp: terminal, ruang penyimpanan, yt-dlp, FFmpeg, dan runtime JavaScript Deno/Node.js.
@@ -21,6 +24,8 @@ yt-conv-support-vercel/
 ├── index.html
 ├── style.css
 ├── script.js
+├── cli-guide.css
+├── cli-guide.js
 ├── vercel.json
 ├── README.md
 ├── .gitignore
@@ -63,7 +68,7 @@ menunjuk ke **Penyimpanan internal → Download**, bukan kartu SD fisik.
 
 Antarmuka diuji di Chromium ukuran desktop dan mobile, termasuk deteksi perangkat, pilihan tutorial, filter distro, pembuat command, tema, tab cookies, pencarian error, dan tur spotlight. Command pemasangan disusun dari dokumentasi resmi terkait, tetapi tidak mungkin dijalankan secara fisik pada semua sistem operasi dari satu mesin pengujian. Karena paket distro dapat berubah, periksa kembali sumber resmi jika package manager menampilkan nama paket yang berbeda.
 
-Referensi utama diperiksa pada 11 Juli 2026: dokumentasi yt-dlp, yt-dlp EJS, Deno, FFmpeg, Termux, Chrome Extensions, Homebrew, dan dokumentasi ChromeOS Linux.
+Referensi dan YTConv CLI v0.5.4 diperiksa pada 17 Juli 2026: dokumentasi yt-dlp, yt-dlp EJS, Deno, FFmpeg, Termux, Chrome Extensions, Homebrew, dan dokumentasi ChromeOS Linux.
 
 ## Video dan referensi per perangkat
 
